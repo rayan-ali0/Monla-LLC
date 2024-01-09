@@ -3,7 +3,7 @@ import bodyParser from "body-parser";
 import "dotenv/config";
 import connectDB from './config/MongoConfig.js';
 import cors from "cors"
-
+import {userRoutes} from './Routes/userRoutes.js'
 const app = express();
 
 app.use(express.json())
@@ -22,3 +22,4 @@ app.listen(PORT, (error) =>{
 );
 connectDB()
 
+// app.use('/user',userRoutes)
