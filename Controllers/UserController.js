@@ -1,14 +1,34 @@
 import User from "../Models/User.js";
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 export const userController = {
-  // Create a new user
-  createUser: async (req, res) => {
+  register: async (req, res) => {
+    const { name, email, number, address, password, role } = req.body;
     try {
-      const newUser = new User(req.body);
-      const savedUser = await newUser.save();
-      res.status(201).json(savedUser);
+      const existingUser = await User.findOne({ email });
+      if (existingUser) {
+        return res.status(400).json({ error: "Email already exists" });
+      }
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
+      const newUser = new User({
+        name,
+        email,
+        number,
+        address,
+        password: hashedPassword,
+        role: role || "user",
+      });
+      await newUser.save();
+  
+      const token = jwt.sign({ userId: newUser._id, role: newUser.role }, process.env.SECRET_TOKEN, { expiresIn: '24h' });
+      res.cookie('access_token', token, { httpOnly: true, secure: true, sameSite: 'None' });
+  
+      res.status(201).json(newUser);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      console.log(error);
+      res.status(500).json({ error: "Internal Server Error" });
     }
   },
 
