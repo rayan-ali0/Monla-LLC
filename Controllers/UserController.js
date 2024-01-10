@@ -21,9 +21,10 @@ export const userController = {
         role: role || "user",
       });
       await newUser.save();
-  
+
+      const isSecure = process.env.NODE_ENV === 'production';
       const token = jwt.sign({ userId: newUser._id, role: newUser.role }, process.env.SECRET_TOKEN, { expiresIn: '24h' });
-      res.cookie('access_token', token, { httpOnly: true, secure: true, sameSite: 'None' });
+      res.cookie('access_token', token, { httpOnly: true, secure: isSecure, sameSite: 'None' });
   
       res.status(201).json(newUser);
     } catch (error) {
@@ -31,7 +32,6 @@ export const userController = {
       res.status(500).json({ error: "Internal Server Error" });
     }
   },
-
   // Get all users
   getAllUsers: async (req, res) => {
     try {
