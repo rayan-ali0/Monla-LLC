@@ -22,4 +22,4 @@ app.listen(PORT, (error) =>{
 );
 connectDB()
 
-// app.use('/user',userRoutes)
+app.use('/user',userRoutes)
