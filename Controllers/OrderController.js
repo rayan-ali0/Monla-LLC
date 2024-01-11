@@ -5,18 +5,26 @@ import User from '../Models/User.js'
 
 export const orderController = {
     createOrder: async (req, res) => {
-        const { address, userId, orderItem } = req.body
-        const date = new Date()
-        const items = await OrderItem.find({ _id: { $in: orderItem } })
-        const product = await Product.find({ _id: { $in: items.productId } })
-        const user = await User.findById({ _id: userId })
+        const { address, userId, orderItems, status } = req.body
+        const deliverDate = null, orderedDate = new Date()
+        const items = await OrderItem.find({ _id: { $in: orderItems } })
+        const productIds = items.map(item => item.productId) // we create an array to contain all the products ID in the order_item table
+        const products = await Product.find({ _id: { $in: productIds } }) // this array is declared from the product table in order to get the price attribute
+        const user = await User.findById({ _id: userId }) // this declaration may be updated later based on authentication
+
+        let total = 0
+        for (let i=0; i<items.length; i++)
+            total += items[i].quantity * products[i].price
+
         try {
             const newOrder = await Order.create({
-                date,
+                status,
+                orderedDate,
+                deliverDate,
                 address,
                 userId: userId,
                 orderItems: items.map(item => item._id),
-                total: items.quantity * product.price
+                total
             })
             await newOrder.save()
             user.order.push(newOrder._id) //user.order is an array attribute in user model which refers to this order model
@@ -36,12 +44,23 @@ export const orderController = {
             res.status(404).json({ status: 404, error: error })
         }
     },
-    getOneOrder: async (req, res) => {
+    getOrderById: async (req, res) => {
         const id = req.params.id
         try {
             const order = await Order.findById({ _id: id })
             order ? res.status(200).json({ Order: order }) :
                 res.status(404).send(`Order with ID ${id} is not found!`)
+        }
+        catch (error) {
+            res.status(404).json({ status: 404, error: error })
+        }
+    },
+    getOrderByOrderNumber: async (req, res) => {
+        const orderNumber = req.body.orderNumber
+        try {
+            const order = await Order.findOne({ orderNumber: orderNumber })
+            order ? res.status(200).json({ Order: order }) : 
+                res.status(404).send(`Order with Order Number ${orderNumber} doesn't exist!`)
         }
         catch (error) {
             res.status(404).json({ status: 404, error: error })
@@ -70,11 +89,38 @@ export const orderController = {
         }
     },
     updateOrder: async (req, res) => {
+        const id = req.params.id
+        const { address, orderItems, status } = req.body
+        let deliverDate = null, total = 0
+        const items = await OrderItem.find({ _id: { $in: orderItems } })
+        const productIds = items.map(item => item.productId)
+        const products = await Product.find({ _id: { $in: productIds } })
 
+        for (let i=0; i<items.length; i++)
+            total += items[i].quantity * products[i].price
+
+        (status === 'Delivered') ? deliverDate = new Date() : deliverDate = null
+
+        try {
+            const editOrder = await Order.findByIdAndUpdate({ _id: id }, { 
+                address,
+                status,
+                deliverDate,
+                orderItems,
+                total
+             })
+            editOrder ? res.status(200).send(`Order with ID ${id} has been updated successfully!`) : 
+             res.status(400).send(`Error occured or Order with ID ${id} is not found!`)
+        }
+        catch (error) {
+            res.status(404).json({ status: 404, error: error })
+        }
     },
     deleteOrder: async (req, res) => {
         const id = req.params.id
         try {
+            const user = await User.findOne({ order: { $in: id } })
+            await user.order.filter(item => item.toString() !== id)
             const removeOrder = await Order.findByIdAndDelete({ _id: id })
                 removeOrder ? res.status(200).send(`Order with ID ${id} has been deleted successfully!`) :
                     res.status(400).send(`Error occured or Order with ID ${id} is not found!`)

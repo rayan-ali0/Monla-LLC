@@ -5,6 +5,7 @@ import "dotenv/config";
 import connectDB from "./config/MongoConfig.js";
 import cors from "cors";
 import { userRoutes } from "./Routes/userRoutes.js";
+import orderRoutes from "./Routes/orderRoutes.js";
 import { login } from "./Middlewares/authentication.js";
 import { logOut } from "./Middlewares/authentication.js";
 const app = express();
@@ -26,6 +27,7 @@ app.listen(PORT, (error) => {
 connectDB();
 
 app.use("/user", userRoutes);
+app.use('/order', orderRoutes)
 
 app.post("/login", login);
 app.get("/logout", logOut);
