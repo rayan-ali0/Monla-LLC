@@ -10,4 +10,6 @@ userRoutes.get('/:id', verifyToken, userController.getUserById);
 userRoutes.put('/:id', verifyToken, userController.updateUserById);
 userRoutes.delete('/:id', verifyToken, userController.deleteUserById);
 
+userRoutes.get('/read/one', verifyToken, userController.getOneUser);
+
 export default userRoutes;

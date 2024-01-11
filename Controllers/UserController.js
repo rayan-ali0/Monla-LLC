@@ -32,6 +32,23 @@ export const userController = {
       res.status(500).json({ error: "Internal Server Error" });
     }
   },
+  getOneUser: async ( req,res)=>{
+    const userId = req.user._id;
+    console.log(req.user);
+    console.log(userId);
+    try{
+        const user = await User.findById(userId)
+        if (user) {
+            res.status(200).json(user);
+          } else {
+            res.status(404).json({ error: "User not found" });
+          }
+        } catch (error) {
+          console.log(error);
+          res.status(500).json({ error: "Internal Server Error"+error.message });
+    }
+  },
+  
   // Get all users
   getAllUsers: async (req, res) => {
     try {
@@ -52,7 +69,7 @@ export const userController = {
       }
       res.status(200).json(user);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({ message: "key one" + error.message });
     }
   },
 
