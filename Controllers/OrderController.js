@@ -27,7 +27,7 @@ export const orderController = {
                 total
             })
             await newOrder.save()
-            user.order.push(newOrder._id) //user.order is an array attribute in user model which refers to this order model
+            await user.order.push(newOrder._id) //user.order is an array attribute in user model which refers to this order model
             newOrder ? res.status(200).json({ message: 'New Order has been created!', Order: newOrder }) :
                 res.status(400).send('Error occured, failed to create a new order!')
         }
@@ -120,8 +120,8 @@ export const orderController = {
         const id = req.params.id
         try {
             const user = await User.findOne({ order: { $in: id } })
-            await user.order.filter(item => item.toString() !== id)
             const removeOrder = await Order.findByIdAndDelete({ _id: id })
+            await user.order.filter(item => item.toString() !== id)
                 removeOrder ? res.status(200).send(`Order with ID ${id} has been deleted successfully!`) :
                     res.status(400).send(`Error occured or Order with ID ${id} is not found!`)
         }
