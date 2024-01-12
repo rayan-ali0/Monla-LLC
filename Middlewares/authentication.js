@@ -6,27 +6,39 @@ import bcrypt, { compare } from 'bcrypt'
 export const verifyToken = (req, res, next) => {
   const token = req.cookies.access_token;
   if (!token) {
+    console.log("reached here")
     return res.status(401).json({ error: "Unauthorized - Missing token" });
   }
 
   try {
     const decoded = jwt.verify(token, process.env.SECRET_TOKEN);
     req.user = decoded;
-    if (req.user.role === "admin") {
-      next();
-    } else {
-      return res
-        .status(403)
-        .json({ message: "Access denied. You have no permission to do that!" });
-    }
+    next();
   } catch (error) {
     console.log(error);
     res.status(401).json({ error: "Unauthorized - Invalid token" });
   }
 };
 
-// login
+// Check Role
+export const checkRole = (roles) => {
+  return (req, res, next) => {
+    try {
+      if (roles.includes(req.user.role)) {
+        next();
+      } else {
+        res.status(500).send("Access denied. You have no permission to do that!");
+      }
+    } catch {
+      return res.status(404).json({
+        error: 404,
+        message: "Not authorized",
+      });
+    }
+  };
+};
 
+// login
 export const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -48,7 +60,7 @@ export const login = async (req, res) => {
           expiresIn: "24h",
         }
       );
-      const isSecure = process.env.NODE_ENV === 'production';
+      const isSecure = process.env.NODE_ENV === 'producion';
       res
         .cookie("access_token", token, {
           httpOnly: true,
