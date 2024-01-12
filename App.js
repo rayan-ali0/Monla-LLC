@@ -5,7 +5,7 @@ import connectDB from './config/MongoConfig.js';
 import cors from "cors"
 import {userRoutes} from './Routes/userRoutes.js'
 const app = express();
-
+import {productRoutes}  from './Routes/productRoutes.js'
 app.use(express.json())
 app.use(cors())
 app.use(bodyParser.urlencoded({extended: true}));
@@ -21,5 +21,5 @@ app.listen(PORT, (error) =>{
 } 
 );
 connectDB()
-
+app.use('/product',productRoutes)
 // app.use('/user',userRoutes)
