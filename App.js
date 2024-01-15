@@ -5,9 +5,10 @@ import "dotenv/config";
 import connectDB from "./config/MongoConfig.js";
 import cors from "cors";
 import { userRoutes } from "./Routes/userRoutes.js";
-import orderRoutes from "./Routes/orderRoutes.js";
 import { login } from "./Middlewares/authentication.js";
 import { logOut } from "./Middlewares/authentication.js";
+import{modelRoutes} from "./Routes/modelRoutes.js";
+import {yearRoutes} from "./Routes/yearRoutes.js";
 const app = express();
 
 app.use(express.json());
@@ -27,7 +28,7 @@ app.listen(PORT, (error) => {
 connectDB();
 
 app.use("/user", userRoutes);
-app.use('/order', orderRoutes)
-
+app.use("/model",modelRoutes)
+app.use("/year",yearRoutes)
 app.post("/login", login);
 app.get("/logout", logOut);
