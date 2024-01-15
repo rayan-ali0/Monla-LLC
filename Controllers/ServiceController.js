@@ -1,19 +1,20 @@
-import Service from "../Models/Service";
+import Service from "../Models/Service.js";
+import fs from 'fs'
 export const serviceController = {
 
     createService: async (req, res) => {
-        const { title, description} = req.body
-        const image = req.files.path;
+        const { title, description } = req.body
+        const image = req.file.path;
         try {
-            const service = await Service.create({ title, description })
-            if(!service){
-                res.status(500).json({message:"Error creating Service"})
+            const service = await Service.create({ title, description, image })
+            if (!service) {
+                res.status(500).json({ message: "Error creating Service" })
 
             }
             res.status(200).json(service)
         }
         catch (error) {
-            res.status(404).json({message: error.message })
+            res.status(404).json({ message: error.message })
         }
     }
     ,
@@ -22,12 +23,12 @@ export const serviceController = {
         try {
             const service = await Service.findById(id);
             if (!service) {
-                res.status(400).json({message:"service Not Found"})
+                res.status(400).json({ message: "service Not Found" })
             }
             res.status(200).json(service)
         }
         catch (error) {
-            res.status(404).json({message:error.message})
+            res.status(404).json({ message: error.message })
         }
     }
     ,
@@ -35,28 +36,23 @@ export const serviceController = {
         try {
             const services = await Service.find();
             if (!services) {
-                res.status(400).json({message:"Services Not Found"})
+                res.status(400).json({ message: "Services Not Found" })
             }
             res.status(200).json(services)
         }
         catch (error) {
-            res.status(404).json({message:error.message})
+            res.status(404).json({ message: error.message })
         }
     }
     ,
     deleteService: async (req, res) => {
         const { id } = req.params
         try {
-            const deletedService = await Service.findByIdAndRemove(id);
+            const deletedService = await Service.findByIdAndDelete(id);
             if (!deletedService) {
                 res.status(404).json({ error: 'Product not found' })
             }
-            // for (let i = 0; i < deletedService.images.length; i++) {
-            //     fs.unlink(deletedService.images[i], (err) => {
-            //         if (err) console.log(err);
-            //         return;
-            //     })
-            // }
+            fs.unlinkSync(deletedService.image)
             res.status(200).json({ status: "Service Deleted" })
         }
         catch (error) {
@@ -65,26 +61,23 @@ export const serviceController = {
     }
     ,
     editService: async (req, res) => {
-
-        const updatedFields = { id, title, description}
+        const { id, title, description } = req.body
+        const updatedFields = { title, description }
+        console.log(updatedFields)
         const editedService = await Service.findById(id)
-        if (req.files) {
-            // updatedFields.images=req.files.map(image => image.path) 
+        if (req.file) {
+            console.log(req.file)
+            updatedFields.image = req.file.path
         }
         if (editedService) {
-            // const oldImages=editedService.images.map(image=>image.split('/')[1])
+            const oldImage = editedService.image
             try {
-                await editedService.updateOne(updatedFields, { new: true })
-                //    for(let i=0; i<oldImages.length; i++){
-                //     fs.unlink(oldImages[i],(err)=>{
-                //         if(err) console.log(err.message);
-                //         return;
-                //     })
-                // }
-                res.status(200).json(editedService)
+                const updated = await Service.findByIdAndUpdate(id, updatedFields, { new: true })
+                if (updatedFields.image) { fs.unlinkSync(oldImage) }
+                res.status(200).json(updated)
             }
             catch (error) {
-                res.status(500).json({message:error.message})
+                res.status(500).json({ message: error.message })
             }
         }
         else {
