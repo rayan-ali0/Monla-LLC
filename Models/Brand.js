@@ -9,6 +9,7 @@ const Brand= new Schema({
     },
     brand:{
         type:String,
+        required:true
     },
     image:{
         type:String,
