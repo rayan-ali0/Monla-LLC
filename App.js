@@ -7,6 +7,8 @@ import cors from "cors";
 import { userRoutes } from "./Routes/userRoutes.js";
 import { login } from "./Middlewares/authentication.js";
 import { logOut } from "./Middlewares/authentication.js";
+import brandRouter from "./Routes/brandRoutes.js";
+import { addUser } from "./Controllers/GoogleAuth.js";
 const app = express();
 
 app.use(express.json());
@@ -28,4 +30,6 @@ connectDB();
 app.use("/user", userRoutes);
 
 app.post("/login", login);
+app.use("/brand", brandRouter)
 app.get("/logout", logOut);
+app.use("/google",addUser)
