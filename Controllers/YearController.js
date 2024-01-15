@@ -1,4 +1,5 @@
 import Year from "../Models/Year.js";
+import mongoose from "mongoose";
 export const yearController = {
 
     createYear: async (req, res) => {
@@ -40,42 +41,64 @@ export const yearController = {
     }
     ,
     deleteYear: async (req, res) => {
-        const { id } = req.params
+        const { id } = req.params;
+
         try {
-            const deletedYear = await Year.findByIdAndRemove(id);
-            if (!deletedYear) {
-                res.status(404).json({ error: 'year not found' })
-            }
-        
-            res.status(200).json({ status: "year Deleted" })
+          // Find and remove the Year document by ID
+          const deletedYear = await Year.findByIdAndDelete(id);
+      
+          if (!deletedYear) {
+            // If the document with the given ID doesn't exist
+            return res.status(404).json({ error: 'Year not found' });
+          }
+      
+          // Successfully deleted
+          res.status(200).json({ status: 'Year deleted' });
+        } catch (error) {
+          // Handle other errors, e.g., database errors
+          console.error(error);
+          res.status(500).json({ error: 'Internal Server Error' });
         }
-        catch (error) {
-            res.status(404).json(error.message)
-        }
-    }
+      }
     ,
     editYear: async (req, res) => {
 
-        const updatedFields = { value, modelId}
-        const editedYear = await Year.findById(id)
+        const { id } = req.params;
+
+        try {
+          // Assuming req.body contains the updated data
+          const { value, modelId } = req.body;
       
-        if (editedYear) {
-            try {
-                await editedYear.updateOne(updatedFields, { new: true })
-
-             
-
-                res.status(200).json(editedYear)
-            }
-            catch (error) {
-                res.status(500).json(error.message)
-            }
+          // Validate that value is an array with two elements
+          if (!Array.isArray(value) || value.length !== 2) {
+            return res.status(400).json({ error: 'Invalid year range format' });
+          }
+      
+          // Assuming modelId is a valid ObjectId
+          if (!mongoose.Types.ObjectId.isValid(modelId)) {
+            return res.status(400).json({ error: 'Invalid Model ID' });
+          }
+      
+          // Check if the document with the given id exists
+          const existingYear = await Year.findById(id);
+          if (!existingYear) {
+            return res.status(404).json({ error: 'Year not found' });
+          }
+      
+          // Update the Year document
+          existingYear.value = value;
+          existingYear.modelId = modelId;
+      
+          // Save the updated document
+          await existingYear.save();
+      
+          // Respond with the updated Year document
+          res.json(existingYear);
+        } catch (error) {
+          console.error(error);
+          res.status(500).json({ error: 'Internal Server Error' });
         }
-        else {
-            res.status(500).json("year Not Found")
-
-        }
-    }
+      }
     ,
     getByModel: async (req, res) => {
         let model = req.params.id;

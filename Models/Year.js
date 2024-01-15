@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const Year = new Schema({
    value: {
-        type: Number,
+        type: [Number],
         required: true,
     },
   

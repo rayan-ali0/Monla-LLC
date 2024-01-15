@@ -3,12 +3,14 @@ import Model from "../Models/Model.js";
 export const modelController = {
 
     createModel: async (req, res) => {
-        const {name, brand_Id} = req.body
+        const {name, brandId} = req.body
         try {
             const model = await Model.create({ name, brandId})
             res.status(200).json(model)
         }
         catch (error) {
+            console.error(error)
+            console.log(error)
             res.status(404).json({ status: 404, error: error })
         }
     }
