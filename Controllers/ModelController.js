@@ -43,43 +43,49 @@ export const modelController = {
     }
     ,
     deleteModel: async (req, res) => {
-        const { id } = req.params
+        const { id } = req.params; 
+
         try {
-            const deletedModel = await Model.findByIdAndRemove(id);
-            if (!deletedModel) {
-                res.status(404).json({ error: 'model not found' })
+            const deletedModel = await Model.findByIdAndDelete(id);
+    
+            if (deletedModel) {
+                res.status(200).json({ message: 'Model deleted successfully' });
+            } else {
+                res.status(404).json({ error: 'Model not found' });
             }
-        
-            res.status(200).json({ status: "model Deleted" })
-        }
-        catch (error) {
-            res.status(404).json(error.message)
+        } catch (error) {
+            res.status(500).json({ error: error.message });
         }
     }
     ,
     editModel: async (req, res) => {
 
-        const updatedFields = { name, brandId}
-        const editedModel = await Model.findById(id)
-      
+        const { id } = req.params; // Assuming you are passing the id through the request parameters
+    const { name, brandId } = req.body; // Assuming you are passing the updated fields in the request body
+
+    try {
+        const editedModel = await Model.findByIdAndUpdate(
+            id,
+            { name, brandId },
+            { new: true, runValidators: true }
+        );
+
         if (editedModel) {
-            // const oldImages=editedProduct.images.map(image=>image.split('/')[1])
-            try {
-                await editedModel.updateOne(updatedFields, { new: true })
-
-             
-
-                res.status(200).json(editedModel)
-            }
-            catch (error) {
-                res.status(500).json(error.message)
-            }
+            res.status(200).json(editedModel);
+        } else {
+            res.status(404).json({ error: "Model not found" });
         }
-        else {
-            res.status(500).json("module Not Found")
-
+    } catch (error) {
+        // Handle validation errors
+        if (error.name === 'ValidationError') {
+            const errors = Object.values(error.errors).map(err => err.message);
+            return res.status(400).json({ error: errors });
         }
+
+        // Handle other errors
+        res.status(500).json({ error: error.message });
     }
+}
     ,
     getByBrand: async (req, res) => {
         let brand = req.params.id;
