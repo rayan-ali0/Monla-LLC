@@ -1,4 +1,4 @@
-import Contact from "../Models/Contact";
+import Contact from "../Models/Contact.js";
 
 export const contactController = {
 
@@ -8,7 +8,6 @@ export const contactController = {
             const contact = await Contact.create({ Name,Email,Phone,message })
             if(contact){
                 res.status(200).json(contact)
-
             }
             else{
                 res.status(500).json({ status: 500, error: "Error creating contact" })
@@ -36,7 +35,7 @@ export const contactController = {
     deleteContact:async (req, res) => {
         const { id } = req.params
         try {
-            const deletedContact = await Contact.findByIdAndRemove(id);
+            const deletedContact = await Contact.findByIdAndDelete(id);
             if (!deletedContact) {
                 res.status(404).json({ error: 'Contact not found' })
             }

@@ -8,6 +8,7 @@ import { userRoutes } from "./Routes/userRoutes.js";
 import { login } from "./Middlewares/authentication.js";
 import { logOut } from "./Middlewares/authentication.js";
 import { serviceRoutes } from "./Routes/serviceRoutes.js";
+import {contactRoutes} from './Routes/contactRoutes.js'
 const app = express();
 import {productRoutes}  from './Routes/productRoutes.js'
 app.use(express.json())
@@ -32,4 +33,5 @@ app.use("/user", userRoutes);
 app.post("/login", login);
 app.get("/logout", logOut);
 app.use("/service", serviceRoutes);
-
+app.use('/contact',contactRoutes)
+app.use('/images',express.static('images'))

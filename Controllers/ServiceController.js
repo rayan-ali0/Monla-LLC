@@ -73,7 +73,9 @@ export const serviceController = {
             const oldImage = editedService.image
             try {
                 const updated = await Service.findByIdAndUpdate(id, updatedFields, { new: true })
-                if (updatedFields.image) { fs.unlinkSync(oldImage) }
+                if (updatedFields.image) {
+                     fs.unlinkSync(oldImage) 
+                    }
                 res.status(200).json(updated)
             }
             catch (error) {

@@ -1,5 +1,5 @@
 import express from "express"
-import {contactController} from '../Controllers/ContactController'
+import {contactController} from '../Controllers/ContactController.js'
 
 export const contactRoutes= express.Router()
 
