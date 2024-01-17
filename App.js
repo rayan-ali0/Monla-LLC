@@ -11,28 +11,35 @@ import{modelRoutes} from "./Routes/modelRoutes.js";
 import {yearRoutes} from "./Routes/yearRoutes.js";
 import brandRouter from "./Routes/brandRoutes.js";
 import { addUser } from "./Controllers/GoogleAuth.js";
+import { serviceRoutes } from "./Routes/serviceRoutes.js";
+import {contactRoutes} from './Routes/contactRoutes.js'
 const app = express();
-
-app.use(express.json());
-app.use(cors());
-app.use(bodyParser.urlencoded({ extended: true }));
+import {productRoutes}  from './Routes/productRoutes.js'
+app.use(express.json())
+app.use(cors())
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 
 const PORT = process.env.PORT;
 
-app.listen(PORT, (error) => {
-  if (!error) {
-    console.log("Server is Running, and App is listening on port " + PORT);
-  } else {
-    console.log("Error: ", error);
-  }
-});
-connectDB();
-
+app.listen(PORT, (error) =>{ 
+    if(!error) {
+        console.log("Server is Running, and App is listening on port "+ PORT) 
+    } else {
+        console.log("Error: ", error)
+    }
+} 
+);
+connectDB()
+app.use('/product',productRoutes)
+app.use(cookieParser());
 app.use("/user", userRoutes);
 app.use("/model",modelRoutes)
 app.use("/year",yearRoutes)
-app.post("/login", login);
 app.use("/brand", brandRouter)
-app.get("/logout", logOut);
 app.use("/google",addUser)
+app.post("/login", login);
+app.get("/logout", logOut);
+app.use("/service", serviceRoutes);
+app.use('/contact',contactRoutes)
+app.use('/images',express.static('images'))
