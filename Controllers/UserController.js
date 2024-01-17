@@ -6,6 +6,9 @@ export const userController = {
   register: async (req, res) => {
     const { name, email, number, address, password, role } = req.body;
     try {
+      if (!password || typeof password !== 'string') {
+        return res.status(400).json({ error: "Invalid password in the request body" });
+      }
       const existingUser = await User.findOne({ email });
       if (existingUser) {
         return res.status(400).json({ error: "Email already exists" });
@@ -34,8 +37,6 @@ export const userController = {
   },
   getOneUser: async ( req,res)=>{
     const userId = req.user._id;
-    console.log(req.user);
-    console.log(userId);
     try{
         const user = await User.findById(userId)
         if (user) {
