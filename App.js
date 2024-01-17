@@ -9,6 +9,8 @@ import { login } from "./Middlewares/authentication.js";
 import { logOut } from "./Middlewares/authentication.js";
 import{modelRoutes} from "./Routes/modelRoutes.js";
 import {yearRoutes} from "./Routes/yearRoutes.js";
+import brandRouter from "./Routes/brandRoutes.js";
+import { addUser } from "./Controllers/GoogleAuth.js";
 const app = express();
 
 app.use(express.json());
@@ -31,4 +33,6 @@ app.use("/user", userRoutes);
 app.use("/model",modelRoutes)
 app.use("/year",yearRoutes)
 app.post("/login", login);
+app.use("/brand", brandRouter)
 app.get("/logout", logOut);
+app.use("/google",addUser)
