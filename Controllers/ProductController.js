@@ -1,23 +1,81 @@
 import Product from "../Models/Product.js";
+import Model from "../Models/Model.js";
+import Year from "../Models/Year.js";
+import Brand from "../Models/Brand.js";
+import Category from "../Models/Category.js";
 
 export const productController = {
-
     createProduct: async (req, res) => {
-        const { title, description, price, SKU, stock, origin, categoryId, subCategoryId } = req.body
-        const image = req.files.path;
         try {
-            const product = await Product.create({ title, description, price, SKU, stock, origin, categoryId, subCategoryId })
-            res.status(200).json(product)
+          // Extract product details from the request body
+          const {
+            title,
+            description,
+            price,
+            SKU,
+            stock,
+            origin,
+            slug,
+            category,
+            brand,
+            model,
+            year,
+          } = req.body;
+
+          const image=req.file.path;
+
+      
+          // Check if the category, brand, model, and year exist
+          const [categoryExists, brandExists, modelExists, yearExists] = await Promise.all([
+            Category.findById(category),
+            Brand.findById(brand),
+            Model.findById(model),
+            Year.findById(year),
+          ]);
+      
+          // Log the results for debugging
+          console.log('categoryExists:', categoryExists);
+          console.log('brandExists:', brandExists);
+          console.log('modelExists:', modelExists);
+          console.log('yearExists:', yearExists);
+      
+          // If any of the referenced models doesn't exist, return an error
+          if (!categoryExists || !brandExists || !modelExists || !yearExists) {
+            return res.status(400).json({ error: "Invalid reference for category, brand, model, or year." });
+          }
+      
+          // Create a new product instance
+          const newProduct = new Product({
+            title,
+            description,
+            image,
+            price,
+            SKU,
+            stock,
+            origin,
+            slug,
+            category,
+            brand,
+            model,
+            year,
+          });
+      
+          // Save the new product to the database
+          const savedProduct = await newProduct.save();
+      
+          res.status(201).json(savedProduct);
+        } catch (error) {
+          console.error("Error creating product:", error);
+          res.status(500).json({ error: "Internal Server Error" });
         }
-        catch (error) {
-            res.status(404).json({ status: 404, error: error })
-        }
-    }
+      }
+      
+      
     ,
     getProductById: async (req, res) => {
         const { id } = req.params
         try {
-            const product = await Product.findById(id).populate(['category', 'subCategory']);
+            const product = await Product.findById(id).populate([ ' category', 'brand','model','year']);
             if (!product) {
                 res.status(400).json("Product Not Found")
             }
@@ -30,16 +88,19 @@ export const productController = {
     ,
     getProducts: async (req, res) => {
         try {
-            const products = await Product.find().populate(['category', 'subCategory']);
-            if (!products) {
-                res.status(400).json("Product Not Found")
+            const products = await Product.find().populate(['category', 'brand', 'model', 'year']);
+            
+            if (products.length === 0) {
+                // Change status to 404 and provide an appropriate message
+                return res.status(404).json("Products Not Found");
             }
-            res.status(200).json(products)
-        }
-        catch (error) {
-            res.status(404).json(error.message)
+            
+            res.status(200).json(products);
+        } catch (error) {
+            res.status(500).json(error.message);
         }
     }
+    
     ,
     deleteProduct: async (req, res) => {
         const { id } = req.params

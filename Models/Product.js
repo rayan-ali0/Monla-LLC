@@ -44,30 +44,30 @@ const Product = new Schema({
         unique:true
     }
     ,
-    // category: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'Category',
-    //     required: true
-    // },
+    category: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category',
+        required: true
+    },
     
-    // brand: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'Brand',
-    //     required:true
-    // }
-    // ,
+    brand: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Brand',
+        required:true
+    }
+    ,
     
-    // model: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'Model',
-    //     required:true
-    // }
+    model: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Model',
+        required:true
+    },
 
-     // year: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'Year',
-    //     required:true
-    // }
+     year: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Year',
+        required:true
+    }
 
 }
 )
