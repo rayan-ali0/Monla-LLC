@@ -1,5 +1,5 @@
 import Model from "../Models/Model.js";
-
+import Brand from '../Models/Brand.js'
 export const modelController = {
 
     createModel: async (req, res) => {
@@ -87,16 +87,21 @@ export const modelController = {
     }
 }
     ,
-    getByBrand: async (req, res) => {
-        let brand = req.params.id;
+    getByBrand:  async (req, res) => {
         try {
-            const models = await Model.find({ brand: brand})
-            res.status(200).json(models)
+          const brandId = req.params.brandId; 
+          const models = await Model.find({ brandId }).exec();
+      
+          if (!models || models.length === 0) {
+            return res.status(404).json({ message: 'No models found for the specified brand ID.' });
+          }
+      
+          res.status(200).json(models);
+        } catch (error) {
+          console.error(error);
+          res.status(500).json({ message: 'Internal Server Error' });
         }
-        catch (error) {
-            res.status(404).json({ status: 404, error: error })
-        }
-    }
+      }
     
     ,
 

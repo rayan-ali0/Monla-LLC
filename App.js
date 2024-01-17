@@ -36,3 +36,4 @@ app.post("/login", login);
 app.use("/brand", brandRouter)
 app.get("/logout", logOut);
 app.use("/google",addUser)
+app.use("/images", express.static("images"));
