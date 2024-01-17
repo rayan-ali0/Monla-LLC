@@ -11,6 +11,7 @@ export const brandController={
             res.status(200).json(brand)
         } catch (error) {
             res.status(404).json(error.message)
+           
         }
     }
 ,

@@ -9,6 +9,8 @@ import { login } from "./Middlewares/authentication.js";
 import { logOut } from "./Middlewares/authentication.js";
 import brandRouter from "./Routes/brandRoutes.js";
 import { addUser } from "./Controllers/GoogleAuth.js";
+
+import categoryRouter from "./Routes/categoryRoutes.js";
 const app = express();
 
 app.use(express.json());
@@ -33,3 +35,5 @@ app.post("/login", login);
 app.use("/brand", brandRouter)
 app.get("/logout", logOut);
 app.use("/google",addUser)
+app.use("/category", categoryRouter)
+app.use("/images" ,express.static("images"))
