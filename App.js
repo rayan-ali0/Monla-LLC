@@ -7,14 +7,21 @@ import cors from "cors";
 import { userRoutes } from "./Routes/userRoutes.js";
 import { login } from "./Middlewares/authentication.js";
 import { logOut } from "./Middlewares/authentication.js";
-import{modelRoutes} from "./Routes/modelRoutes.js";
-import {yearRoutes} from "./Routes/yearRoutes.js";
+import { modelRoutes } from "./Routes/modelRoutes.js";
+import { yearRoutes } from "./Routes/yearRoutes.js";
 import brandRouter from "./Routes/brandRoutes.js";
 import { addUser } from "./Controllers/GoogleAuth.js";
+import { verifyToken } from "./Middlewares/authentication.js";
+import { loggedInUser } from "./Middlewares/authentication.js";
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+const corsOption = {
+  origin: "http://localhost:5173",
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
+app.use(cors(corsOption));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
@@ -30,9 +37,11 @@ app.listen(PORT, (error) => {
 connectDB();
 
 app.use("/user", userRoutes);
-app.use("/model",modelRoutes)
-app.use("/year",yearRoutes)
+app.use("/model", modelRoutes);
+app.use("/year", yearRoutes);
 app.post("/login", login);
-app.use("/brand", brandRouter)
+app.use("/brand", brandRouter);
 app.get("/logout", logOut);
-app.use("/google",addUser)
+app.use("/google", addUser);
+
+app.use("/logged-in-user", verifyToken, loggedInUser);
