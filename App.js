@@ -7,17 +7,25 @@ import cors from "cors";
 import { userRoutes } from "./Routes/userRoutes.js";
 import { login } from "./Middlewares/authentication.js";
 import { logOut } from "./Middlewares/authentication.js";
-import{modelRoutes} from "./Routes/modelRoutes.js";
-import {yearRoutes} from "./Routes/yearRoutes.js";
+import { modelRoutes } from "./Routes/modelRoutes.js";
+import { yearRoutes } from "./Routes/yearRoutes.js";
 import brandRouter from "./Routes/brandRoutes.js";
 import { addUser } from "./Controllers/GoogleAuth.js";
 import { serviceRoutes } from "./Routes/serviceRoutes.js";
 import {contactRoutes} from './Routes/contactRoutes.js'
-const app = express();
 import {productRoutes}  from './Routes/productRoutes.js'
-app.use(express.json())
-app.use(cors())
-app.use(bodyParser.urlencoded({extended: true}));
+import { verifyToken } from "./Middlewares/authentication.js";
+import { loggedInUser } from "./Middlewares/authentication.js";
+const app = express();
+
+app.use(express.json());
+const corsOption = {
+  origin: "http://localhost:5173",
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
+app.use(cors(corsOption));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 const PORT = process.env.PORT;
@@ -32,7 +40,6 @@ app.listen(PORT, (error) =>{
 );
 connectDB()
 app.use('/product',productRoutes)
-app.use(cookieParser());
 app.use("/user", userRoutes);
 app.use("/model",modelRoutes)
 app.use("/year",yearRoutes)
@@ -43,3 +50,5 @@ app.get("/logout", logOut);
 app.use("/service", serviceRoutes);
 app.use('/contact',contactRoutes)
 app.use('/images',express.static('images'))
+
+app.use("/logged-in-user", verifyToken, loggedInUser);
