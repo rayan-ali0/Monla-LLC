@@ -38,6 +38,12 @@ const Product = new Schema({
         required: true
     }
     ,
+    volume:{
+        type:Number,
+        required:false,
+        default:0
+    }
+    ,
     slug: {
         type: String,
         required: true,
@@ -49,24 +55,24 @@ const Product = new Schema({
         ref: 'Category',
         required: true
     },
-    
+
     brand: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Brand',
-        required:true
+        required:false
     }
     ,
-    
+
     model: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Model',
-        required:true
+        required:false
     },
 
      year: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Year',
-        required:true
+        required:false
     }
 
 }
