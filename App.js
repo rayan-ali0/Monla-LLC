@@ -18,6 +18,7 @@ import { verifyToken } from "./Middlewares/authentication.js";
 import { loggedInUser } from "./Middlewares/authentication.js";
 import categoryRouter from "./Routes/categoryRoutes.js";
 import companyRoutes from "./Routes/companyRoutes.js";
+import shippingRoutes from "./Routes/shippingRoutes.js";
 
 const app = express();
 
@@ -60,4 +61,5 @@ app.use("/logged-in-user", verifyToken, loggedInUser);
 
 app.use("/category", categoryRouter)
 app.use('/company', companyRoutes);
+app.use('/shipping', shippingRoutes);
 

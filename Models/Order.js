@@ -21,7 +21,12 @@ const orderSchema = new Schema(
         userId: {
             type: Schema.Types.ObjectId,
             ref: 'User'
-        }
+        },
+        shippingId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Shipping',
+            required: true
+        },
     }
 )
 
