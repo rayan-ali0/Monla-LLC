@@ -16,6 +16,8 @@ import {contactRoutes} from './Routes/contactRoutes.js'
 import {productRoutes}  from './Routes/productRoutes.js'
 import { verifyToken } from "./Middlewares/authentication.js";
 import { loggedInUser } from "./Middlewares/authentication.js";
+
+import categoryRouter from "./Routes/categoryRoutes.js";
 const app = express();
 
 app.use(express.json());
@@ -52,3 +54,6 @@ app.use('/contact',contactRoutes)
 app.use('/images',express.static('images'))
 
 app.use("/logged-in-user", verifyToken, loggedInUser);
+app.use("/google",addUser)
+app.use("/category", categoryRouter)
+// app.use("/images" ,express.static("images"))
