@@ -38,36 +38,42 @@ const Product = new Schema({
         required: true
     }
     ,
+    volume:{
+        type:Number,
+        required:false,
+        default:0
+    }
+    ,
     slug: {
         type: String,
         required: true,
         unique:true
     }
     ,
-    // category: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'Category',
-    //     required: true
-    // },
+    category: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category',
+        required: true
+    },
     
-    // brand: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'Brand',
-    //     required:true
-    // }
-    // ,
+    brand: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Brand',
+        required:false
+    }
+    ,
     
-    // model: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'Model',
-    //     required:true
-    // }
+    model: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Model',
+        required:false
+    },
 
-     // year: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'Year',
-    //     required:true
-    // }
+     year: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Year',
+        required:false
+    }
 
 }
 )

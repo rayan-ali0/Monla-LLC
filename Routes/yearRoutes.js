@@ -9,6 +9,6 @@ yearRoutes.get('/allyear', yearController.getYears);
 yearRoutes.get('/:id', yearController.getYearById);
 yearRoutes.put('/:id',verifyToken, checkRole(["admin"]), yearController.editYear);
 yearRoutes.delete('/:id', verifyToken, checkRole(["admin"]), yearController.deleteYear);
-yearRoutes.get('/getByModel', yearController.getByModel);
+yearRoutes.get('/byModel/:modelId', yearController.getByModel);
 
 export default yearRoutes;
