@@ -15,6 +15,8 @@ import { serviceRoutes } from "./Routes/serviceRoutes.js";
 import {contactRoutes} from './Routes/contactRoutes.js'
 const app = express();
 import {productRoutes}  from './Routes/productRoutes.js'
+import { categoryController } from "./Controllers/CategoryController.js";
+import categoryRouter from './Routes/categoryRoutes.js'
 app.use(express.json())
 app.use(cors())
 app.use(bodyParser.urlencoded({extended: true}));
@@ -45,3 +47,4 @@ app.use("/google",addUser)
 app.use("/service", serviceRoutes);
 app.use('/contact',contactRoutes)
 app.use('/images',express.static('images'))
+app.use('/category',categoryRouter)

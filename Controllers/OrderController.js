@@ -69,9 +69,11 @@ export const orderController = {
             res.status(404).json({ status: 404, error: error })
         }
     },
+
     updateOrder: async (req, res) => {
 
     },
+    
     deleteOrder: async (req, res) => {
         const id = req.params.id
         try {
