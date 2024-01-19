@@ -19,25 +19,25 @@ export const addUser=async(req,res)=>{
             {expiresIn:"24h"}
             )
 
-            const { name, email ,number,address, role, password, } = findUser;
-            let newUser = { firstName, lastName, email, role, image };
+            const { name, email , password, } = findUser;
+            let newUser = { name, email, role, password };
             return res.status(200).json({ newUser, token });
         }else{
             try {
                 try {
                     const hashedPass = await bcrypt.hash(user.password, 10);
-                    const newOne = await userModel.create({
+                    const newOne = await User.create({
                       ...user,
                       password: hashedPass,
                       role: user.role,
                     });
                     const token = jwt.sign(
                       { role: newOne.role, userId: newOne.id },
-                      process.env.TOKEN,
+                      process.env.SECRET_TOKEN,
                       { expiresIn: "24h" }
                     );
-                    const { lastName, firstName, role, image, email } = newOne;
-                    let newUser = { firstName, lastName, email, role, image };
+                    const { name, role,  email, } = newOne;
+                    let newUser = { name, email };
                     return res.status(200).json({ newUser, token });
                   } catch (error) {
                     console.error(error);
