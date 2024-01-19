@@ -55,14 +55,14 @@ const Product = new Schema({
         ref: 'Category',
         required: true
     },
-    
+
     brand: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Brand',
         required:false
     }
     ,
-    
+
     model: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Model',

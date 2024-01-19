@@ -12,4 +12,3 @@ productRoutes.put('/update',uploadImage.single("image"),productController.editPr
 productRoutes.get('/category/:id',productController.getByCategory)
 productRoutes.get('/related/five',productController.getRelated)
 productRoutes.get('/filter/By',productController.getByFilter)
-
