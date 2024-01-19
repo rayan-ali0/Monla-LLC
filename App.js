@@ -17,6 +17,7 @@ import {productRoutes}  from './Routes/productRoutes.js'
 import { verifyToken } from "./Middlewares/authentication.js";
 import { loggedInUser } from "./Middlewares/authentication.js";
 import categoryRouter from "./Routes/categoryRoutes.js";
+import companyRoutes from "./Routes/companyRoutes.js";
 
 const app = express();
 
@@ -58,4 +59,5 @@ app.use('/images',express.static('images'))
 app.use("/logged-in-user", verifyToken, loggedInUser);
 
 app.use("/category", categoryRouter)
+app.use('/company', companyRoutes);
 
