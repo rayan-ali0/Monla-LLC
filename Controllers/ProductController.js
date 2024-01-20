@@ -40,7 +40,7 @@ export const productController = {
                 return res.status(400).json({ error: "Invalid reference for category, brand, model, or year." });
             }
             const titleExist = await Product.find({ title: title })
-            if (titleExist) {
+            if (titleExist.length>0) {
                 return res.status(400).json({ message: "Title already exist" })
 
             }
@@ -74,7 +74,7 @@ export const productController = {
             res.status(201).json(savedProduct);
         } catch (error) {
             console.error("Error creating product:", error);
-            res.status(500).json({ error: "Internal Server Error" });
+            res.status(500).json({ error: error.message});
         }
     }
 
@@ -202,32 +202,40 @@ export const productController = {
     }
     ,
     getByFilter: async (req, res) => {
-        const { category, volume, brand, model, year } = req.body
-        const searchBy = {}
+        const { category, volume, brand, model, year } = req.query;
+        console.log("Received parameters:", { category, volume, brand, model, year });
+    
+        const searchBy = {};
+    
         if (category) {
-            searchBy.category = category
+            searchBy.category = category;
         }
         if (volume) {
-            searchBy.volume = volume
+            searchBy.volume = volume;
         }
         if (brand) {
-            searchBy.brand = brand
+            searchBy.brand = brand;
         }
         if (model) {
-            searchBy.model = model
+            searchBy.model = model;
         }
         if (year) {
-            searchBy.year = year
+            searchBy.year = year;
         }
+    
         try {
-            const products = await Product.find(searchBy)
-            res.status(200).json(products)
-        }
-        catch (error) {
-            res.status(404).json({ message: error.message })
-
+            console.log("Search criteria:", searchBy);
+            const products = await Product.find(searchBy);
+            console.log("Found products:", products);
+            res.status(200).json(products);
+        } catch (error) {
+            console.error("Error fetching products:", error);
+            res.status(404).json({ message: error.message });
         }
     }
+    
+    
+    
 
 
 
