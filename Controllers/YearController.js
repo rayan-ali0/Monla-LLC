@@ -101,14 +101,19 @@ export const yearController = {
       }
     ,
     getByModel: async (req, res) => {
-        let model = req.params.id;
-        try {
-            const years = await Year.find({ model: model})
-            res.status(200).json(years)
+      try {
+        const modelId = req.params.modelId; 
+        const years = await Year.find({ modelId }).exec();
+    
+        if (!years || years.length === 0) {
+          return res.status(404).json({ message: 'No years found for the specified model ID.' });
         }
-        catch (error) {
-            res.status(404).json({ status: 404, error: error })
-        }
+    
+        res.status(200).json(years);
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+      }
     }
     
     ,

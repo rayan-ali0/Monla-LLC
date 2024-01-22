@@ -10,6 +10,6 @@ userRoutes.get('/:id', verifyToken, checkRole(["admin"]), userController.getUser
 userRoutes.put('/:id', verifyToken, checkRole(["admin"]), userController.updateUserById);
 userRoutes.delete('/:id', verifyToken, checkRole(["admin"]), userController.deleteUserById);
 
-userRoutes.get('/read/one', verifyToken, checkRole(["admin"]), userController.getOneUser);
+userRoutes.get('/read/one', verifyToken, userController.getOneUser);
 
 export default userRoutes;

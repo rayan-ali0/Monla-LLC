@@ -3,11 +3,13 @@ import Category from "../Models/Category.js";
 export const categoryController={
     createCategory:async(req,res)=>{
         const {title}=req.body
+        const image=req.file.path
         try {
-            const category= await Category.create({title})
+            const category= await Category.create({title, image})
             res.status(200).json(category)
         } catch (error) {
             res.status(404).json(error.message)
+            console.log(error.message)
         }
     }
     ,
@@ -36,6 +38,7 @@ export const categoryController={
     },
     updateCategory: async (req, res) => {
         const { categoryId } = req.body;
+        const image=req.file.path
         const { id } = req.params;
     
         try {

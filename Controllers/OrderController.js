@@ -88,6 +88,7 @@ export const orderController = {
             res.status(404).json({ status: 404, error: error })
         }
     },
+
     updateOrder: async (req, res) => {
         const id = req.params.id
         const { address, orderItems, status } = req.body
@@ -116,6 +117,7 @@ export const orderController = {
             res.status(404).json({ status: 404, error: error })
         }
     },
+    
     deleteOrder: async (req, res) => {
         const id = req.params.id
         try {

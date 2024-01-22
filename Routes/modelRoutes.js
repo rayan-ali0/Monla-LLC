@@ -9,6 +9,6 @@ modelRoutes.get('/allmodel', modelController.getModels);
 modelRoutes.get('/:id', modelController.getModelById);
 modelRoutes.put('/:id',verifyToken, checkRole(["admin"]), modelController.editModel);
 modelRoutes.delete('/:id', verifyToken, checkRole(["admin"]), modelController.deleteModel);
-modelRoutes.get('/getByBrand', modelController.getByBrand);
+modelRoutes.get('/byBrand/:brandId', modelController.getByBrand);
 
 export default modelRoutes;
