@@ -1,32 +1,31 @@
 import { Schema, model } from 'mongoose'
-import autoIncrement from 'mongoose-auto-increment'
 
 const orderSchema = new Schema(
     {
-        total: {
-            type: Number,
-            required: true
-        },
         address: {
             type: String,
             required: true
         },
+        orderNumber: {
+            type: Number
+        },
         orderedDate: {
-            type: Date,
-            required: true
+            type: Date
         },
         deliverDate: {
-            type: Date
+            type: Date,
+            default: null
         },
         status: {
             type: String,
-            enum: ['Delivered', 'Not Delivered'],
-            default: 'Not Delivered',
-            required: true
+            enum: ['delivered', 'pending', 'sent', 'initialized']
         },
-        orderItems: {
-            type: [Schema.Types.ObjectId],
-            ref: 'OrderItem'
+        total: {
+            type: Number
+        },
+        pruductsOrdered: {
+            type: [Object],
+            ref: 'Product'
         },
         userId: {
             type: Schema.Types.ObjectId,
@@ -39,8 +38,6 @@ const orderSchema = new Schema(
         },
     }
 )
-
-orderSchema.plugin(autoIncrement.plugin, { model: 'Order', field: 'orderNumber', startAt: 1 })
 
 const order = model('Order', orderSchema)
 

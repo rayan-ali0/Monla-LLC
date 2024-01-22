@@ -22,8 +22,5 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@types/mongoose-auto-increment": "^5.0.38"
-  }
+  "license": "ISC"
 }
