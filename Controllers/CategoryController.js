@@ -60,6 +60,12 @@ export const categoryController={
     ,
     deleteCategory:async(req,res)=>{
         const {id}=req.params
+        if(!id){
+            return res.status(500).json({
+                message: "Error! can't find id, not valid"
+            })
+        }
+        console.log("entering try with: ", id);
         try {
             const deletedCategory= await Category.findByIdAndDelete(id)
             if(!deletedCategory){
