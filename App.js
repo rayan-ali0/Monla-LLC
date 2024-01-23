@@ -21,10 +21,6 @@ import companyRoutes from "./Routes/companyRoutes.js";
 import shippingRoutes from "./Routes/shippingRoutes.js";
 
 
-app.use(express.json());
-
-import { verifyToken } from "./Middlewares/authentication.js";
-import { loggedInUser } from "./Middlewares/authentication.js";
 const app = express();
 
 const corsOption = {
@@ -34,8 +30,9 @@ const corsOption = {
 };
 
 app.use(cors(corsOption));
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(express.json())
+app.use(bodyParser.urlencoded({extended: true}));
 
 const PORT = process.env.PORT;
 
