@@ -28,7 +28,7 @@ const orderSchema = new Schema(
         },
         status: {
             type: String,
-            enum: ['delivered', 'pending', 'sent', 'initialized']
+            enum: ['delivered', 'pending', 'sent', 'accepted','rejected']
         },
         total: {
             type: Number,

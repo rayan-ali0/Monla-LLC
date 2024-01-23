@@ -1,5 +1,5 @@
 import Order from "../Models/Order.js"
-// import Product from '../Models/Product.js'
+import Product from '../Models/Product.js'
 import User from '../Models/User.js'
 // import Shipping from '../Models/Shipping.js'
 
@@ -21,7 +21,7 @@ export const orderController = {
                 userPhone,
                 address,
                 orderNumber: count,
-                status: 'initialized',
+                status: 'pending',
                 total,
                 userId,
                 productsOrdered
@@ -96,7 +96,7 @@ export const orderController = {
         for (let product in productsOrdered)
             total += (product[i].quantity * product[i].price)
 
-        (status === 'Delivered') ? deliverDate = new Date() : deliverDate = null
+        (status === 'delivered') ? deliverDate = new Date() : deliverDate = null
 
         try {
             const editOrder = await Order.findByIdAndUpdate( id, { 
@@ -106,9 +106,27 @@ export const orderController = {
                 deliverDate,
                 productsOrdered
              })
-            editOrder ? res.status(200).send(`Order with ID ${id} has been updated successfully!`) : 
-             res.status(400).send(`Error occured or Order with ID ${id} is not found!`)
+           if(editOrder)
+           {
+            if(status==="rejected" && productsOrdered){
+                for(let i=0;i<editOrder.pruductsOrdered.length;i++){
+                   const productId=editOrder.pruductsOrdered[i].id
+                   const productExist=await Product.findById(productId)
+                   if(productExist){
+                    const orderedStock=editOrder.productsOrdered[i].stock
+                    const returnedStock=productExist.stock+orderedStock
+                    await findByIdAndUpdate(productId,{stock:returnedStock})
+
+                   }
+                }
+
+            }
+            res.status(200).send(`Order with ID ${id} has been updated successfully!`) 
         }
+            res.status(400).send(`Error occured or Order with ID ${id} is not found!`)
+
+
+        }   
         catch (error) {
             res.status(404).json({ status: 404, error: error })
         }
