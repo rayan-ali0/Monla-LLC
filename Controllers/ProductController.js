@@ -193,7 +193,7 @@ export const productController = {
             query.brand = brand
         }
         try {
-            const products = await Product.find(query).limit(5)
+            const products = await Product.find(query).limit(5).populate(['category','brand','model', 'year'])
             res.status(200).json(products)
         }
         catch (error) {
