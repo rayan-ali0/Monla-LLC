@@ -96,7 +96,9 @@ export const productController = {
     ,
     getProducts: async (req, res) => {
         try {
-            const products = await Product.find().populate(['category', 'brand', 'model', 'year']);
+            const offset= req.offset || 0;
+            const limit = req.limit || 10
+            const products = await Product.find().limit(limit).skip(offset).populate(['category', 'brand', 'model', 'year']).exec();
 
             if (products.length === 0) {
                 // Change status to 404 and provide an appropriate message
