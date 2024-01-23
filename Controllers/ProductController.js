@@ -40,7 +40,7 @@ export const productController = {
                 return res.status(400).json({ error: "Invalid reference for category, brand, model, or year." });
             }
             const titleExist = await Product.find({ title: title })
-            if (titleExist) {
+            if (titleExist.length >0) {
                 return res.status(400).json({ message: "Title already exist" })
 
             }
