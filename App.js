@@ -20,6 +20,8 @@ import categoryRouter from "./Routes/categoryRoutes.js";
 import companyRoutes from "./Routes/companyRoutes.js";
 import shippingRoutes from "./Routes/shippingRoutes.js";
 
+import brandRouter from "./Routes/brandRoutes.js";
+import { addUser } from "./Controllers/GoogleAuth.js";
 const app = express();
 
 app.use(express.json());
@@ -52,6 +54,7 @@ app.use("/year",yearRoutes)
 app.use("/brand", brandRouter)
 app.use("/google",addUser)
 app.post("/login", login);
+<<<<<<< HEAD
 app.get("/logout", logOut);
 app.use("/service", serviceRoutes);
 app.use('/contact',contactRoutes)
@@ -63,3 +66,8 @@ app.use("/category", categoryRouter)
 app.use('/company', companyRoutes);
 app.use('/shipping', shippingRoutes);
 
+=======
+app.use("/brand", brandRouter)
+app.get("/logout", logOut);
+app.use("/google",addUser)
+>>>>>>> c74e0d4 (google auth and some fixing)
