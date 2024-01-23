@@ -20,9 +20,12 @@ import categoryRouter from "./Routes/categoryRoutes.js";
 import companyRoutes from "./Routes/companyRoutes.js";
 import shippingRoutes from "./Routes/shippingRoutes.js";
 
-const app = express();
 
 app.use(express.json());
+
+import { verifyToken } from "./Middlewares/authentication.js";
+import { loggedInUser } from "./Middlewares/authentication.js";
+const app = express();
 
 const corsOption = {
   origin: "http://localhost:5173",
