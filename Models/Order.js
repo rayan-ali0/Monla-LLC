@@ -2,15 +2,25 @@ import { Schema, model } from 'mongoose'
 
 const orderSchema = new Schema(
     {
-        address: {
+        orderNumber: {
+            type: Number,
+            default:1
+        },
+        userName:{
             type: String,
             required: true
         },
-        orderNumber: {
-            type: Number
+        userEmail:{
+            type: String,
+            required: true
         },
-        orderedDate: {
-            type: Date
+        userPhone:{
+            type: String,
+            required: true
+        },
+        address: {
+            type: String,
+            required: true
         },
         deliverDate: {
             type: Date,
@@ -21,7 +31,8 @@ const orderSchema = new Schema(
             enum: ['delivered', 'pending', 'sent', 'initialized']
         },
         total: {
-            type: Number
+            type: Number,
+            required:true
         },
         pruductsOrdered: {
             type: [Object],
@@ -37,6 +48,11 @@ const orderSchema = new Schema(
             required: true
         },
     }
+    ,
+{
+    timestamps:true
+}
+
 )
 
 const order = model('Order', orderSchema)

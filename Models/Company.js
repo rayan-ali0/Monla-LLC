@@ -32,6 +32,11 @@ const Company = new Schema({
   tiktok: {
     type: String,
   },
-});
+}
+,
+{
+    timestamps:true
+}
+);
 
 export default mongoose.model("Company", Company);

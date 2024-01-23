@@ -24,6 +24,11 @@ const Contact = new Schema({
     }
 
 }
+,
+{
+    timestamps:true
+}
+
 )
 
 export default mongoose.model('Contact', Contact)

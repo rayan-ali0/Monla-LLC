@@ -1,33 +1,38 @@
 import Order from "../Models/Order.js"
-import Product from '../Models/Product.js'
+// import Product from '../Models/Product.js'
 import User from '../Models/User.js'
+// import Shipping from '../Models/Shipping.js'
 
 export const orderController = {
     createOrder: async (req, res) => {
-        const { address, userId, productsOrdered } = req.body
-        const orderedDate = new Date()
-        const user = await User.findById({ _id: userId })
+        const { userName,userEmail,total,shippingId,userPhone,address, userId, productsOrdered } = req.body
+        // const orderedDate = new Date()
+        // const user = await User.findById({ _id: userId })
         const orders = await Order.find()
-        let total = 0, count = orders.length + 1
-        for (let product in productsOrdered)
-            total += (product[i].quantity * product[i].price)
+        // let total = 0,
+        let count = orders.length + 1
+        // for (let product in productsOrdered)
+        //     total += (product[i].quantity * product[i].price)
         try {
             const newOrder = await Order.create({
+                userName,
+                userEmail,
+                shippingId,
+                userPhone,
                 address,
                 orderNumber: count,
-                orderedDate,
                 status: 'initialized',
                 total,
                 userId,
                 productsOrdered
             })
             await newOrder.save()
-            await user.order.push(newOrder._id) //user.order is an array attribute in user model which refers to this order model
+            // await user.order.push(newOrder._id) //user.order is an array attribute in user model which refers to this order model
             newOrder ? res.status(200).json({ message: 'New Order has been created!', Order: newOrder }) :
                 res.status(400).send('Error occured, failed to create a new order!')
         }
         catch (error) {
-            res.status(404).json({ status: 404, error: error })
+            res.status(404).json({ status: 404, error: error.message })
         }
     },
     getAllOrders: async (req, res) => {
@@ -42,7 +47,7 @@ export const orderController = {
     getOrderById: async (req, res) => {
         const id = req.params.id
         try {
-            const order = await Order.findById({ _id: id })
+            const order = await Order.findById(id)
             order ? res.status(200).json({ Order: order }) :
                 res.status(404).send(`Order with ID ${id} is not found!`)
         }
@@ -75,7 +80,7 @@ export const orderController = {
     getOrdersByDate: async (req, res) => {
         const date = req.body.date
         try {
-            const orders = await Order.find({ date: date })
+            const orders = await Order.find({ createdAt: date })
             orders ? res.status(200).json({ Orders: orders }) :
                 res.status(404).send(`No orders on date ${date} or an error occured!`)
         }
@@ -94,7 +99,7 @@ export const orderController = {
         (status === 'Delivered') ? deliverDate = new Date() : deliverDate = null
 
         try {
-            const editOrder = await Order.findByIdAndUpdate({ _id: id }, { 
+            const editOrder = await Order.findByIdAndUpdate( id, { 
                 address,
                 status,
                 total,

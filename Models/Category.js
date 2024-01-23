@@ -12,6 +12,11 @@ const Category= new Schema({
         required:true
     }
 
-})
+}
+,
+{
+    timestamps:true
+}
+)
 
 export default mongoose.model("Category", Category)
