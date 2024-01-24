@@ -52,7 +52,7 @@ app.use("/year",yearRoutes)
 app.use("/brand", brandRouter)
 app.use("/google",addUser)
 app.post("/login", login);
-app.get("/logout", logOut);
+app.post("/logout", logOut);
 app.use("/service", serviceRoutes);
 app.use('/contact',contactRoutes)
 app.use('/images',express.static('images'))
