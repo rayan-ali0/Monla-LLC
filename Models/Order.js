@@ -1,4 +1,8 @@
-import { Schema, model } from 'mongoose'
+// import { Schema, model } from 'mongoose'
+import mongoose from "mongoose";
+
+const Schema = mongoose.Schema;
+
 
 const orderSchema = new Schema(
     {
@@ -28,18 +32,32 @@ const orderSchema = new Schema(
         },
         status: {
             type: String,
-            enum: ['delivered', 'pending', 'sent', 'accepted','rejected']
+            enum: ['delivered', 'pending', 'sent', 'accepted','rejected'],
+            default: "pending"
         },
         total: {
             type: Number,
             required:true
         },
-        pruductsOrdered: {
-            type: [Object],
-            ref: 'Product'
-        },
+        // pruductsOrdered: {
+        //     type: [Object],
+        //     ref: 'Product'
+        // },
+        productsOrdered: [{
+            orderId: {
+                type: mongoose.Schema.Types.ObjectId,
+                required: true,
+                ref: "Product"
+            },
+            count: {
+                type: Number,
+                required: true,
+                default: 1
+            }
+        }],
         userId: {
-            type: Schema.Types.ObjectId,
+            // type: Schema.Types.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
             ref: 'User'
         },
         shippingId: {
@@ -54,7 +72,7 @@ const orderSchema = new Schema(
 }
 
 )
+// const order = model('Order', orderSchema)
 
-const order = model('Order', orderSchema)
-
-export default order
+// export default order
+export default mongoose.model("Order", orderSchema);
