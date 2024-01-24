@@ -97,7 +97,7 @@ export const loggedInUser = (req, res) => {
 
 export const logOut = (req, res) => {
   return res
-    .clearCookie("access_token")
+    .clearCookie("token")
     .status(200)
     .json({ message: "Successfully Logged Out!" });
 };

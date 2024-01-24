@@ -73,7 +73,7 @@ export const productController = {
             res.status(201).json(savedProduct);
         } catch (error) {
             console.error("Error creating product:", error);
-            res.status(500).json({ error: "Internal Server Error" });
+            res.status(500).json( error.message);
         }
     }
 
