@@ -8,7 +8,7 @@ export const orderController = {
         const { userName, userEmail, total, shippingId, userPhone, address, userId, productsOrdered } = req.body
         // const orderedDate = new Date()
         // const user = await User.findById({ _id: userId })
-        const orders = await Order.find()
+        const orders = await Order.find()   
         // let total = 0,
         let count = orders.length + 1
         // for (let product in productsOrdered)
@@ -26,11 +26,12 @@ export const orderController = {
                 userId,
                 productsOrdered
             })
-            if (newOrder) {
+            if (newOrder ) {
                 for (let i = 0; i < productsOrdered.length; i++) {
                     const product = await Product.findById(productsOrdered[i].productId)
                     if (product) {
-                        product.stock -= productsOrdered[i].quantity
+                        console.log(product.stock)
+                        product.stock -= Number(productsOrdered[i].quantity)
                         await product.save()
                     }
                     else {
@@ -104,13 +105,12 @@ export const orderController = {
     updateOrder: async (req, res) => {
         const id = req.params.id
         // const { address, status, productsOrdered } = req.body
-        const { address, status } = req.body
+        const { status } = req.body
 
-        // let deliverDate = null, total = 0
+        let deliverDate = null
         // for (let product in productsOrdered)
         //     total += (product[i].quantity * product[i].price)
         try {
-            (status === 'delivered') ? deliverDate = new Date() : deliverDate = null
             if (status === 'delivered') {
                 deliverDate = new Date()
             }
@@ -138,18 +138,24 @@ export const orderController = {
 
         }
         catch (error) {
-            res.status(404).json({ status: 404, error: error })
+            res.status(404).json({message:error.message })
         }
     },
 
     deleteOrder: async (req, res) => {
         const id = req.params.id
         try {
-            // const user = await User.findOne({ order: { $in: id } })
-            const removeOrder = await Order.findByIdAndDelete({ _id: id })
-            // await user.order.filter(item => item.toString() !== id)
-            removeOrder ? res.status(200).send(`Order with ID ${id} has been deleted successfully!`) :
-                res.status(400).send(`Error occured or Order with ID ${id} is not found!`)
+            const removeOrder = await Order.findById(id)
+            if(removeOrder){
+                removeOrder.status!=="delivered" || removeOrder.status!=="rejected" &&
+                res.status(400).json({message:"You can only delete delivered or rejected Orders"})
+await  Order.deleteOne({_id:removeOrder._id})
+res.status(200).send(`Order with ID ${id} has been deleted successfully!`) :
+
+            }
+        //     removeOrder ? res.status(200).send(`Order with ID ${id} has been deleted successfully!`) :
+        //         res.status(400).send(`Error occured or Order with ID ${id} is not found!`)
+        // 
         }
         catch (error) {
             res.status(404).json({ status: 404, error: error })
