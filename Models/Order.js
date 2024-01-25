@@ -32,7 +32,7 @@ const orderSchema = new Schema(
         },
         status: {
             type: String,
-            enum: ['delivered', 'pending', 'sent', 'accepted','rejected'],
+            enum: ['pending', 'sent', 'accepted','rejected','delivered'],
             default: "pending"
         },
         total: {
@@ -44,12 +44,12 @@ const orderSchema = new Schema(
         //     ref: 'Product'
         // },
         productsOrdered: [{
-            orderId: {
+            productId: {
                 type: mongoose.Schema.Types.ObjectId,
                 required: true,
                 ref: "Product"
             },
-            count: {
+            quantity: {
                 type: Number,
                 required: true,
                 default: 1
