@@ -150,7 +150,7 @@ export const orderController = {
                 removeOrder.status!=="delivered" || removeOrder.status!=="rejected" &&
                 res.status(400).json({message:"You can only delete delivered or rejected Orders"})
 await  Order.deleteOne({_id:removeOrder._id})
-res.status(200).send(`Order with ID ${id} has been deleted successfully!`) :
+res.status(200).send(`Order with ID ${id} has been deleted successfully!`) 
 
             }
         //     removeOrder ? res.status(200).send(`Order with ID ${id} has been deleted successfully!`) :
