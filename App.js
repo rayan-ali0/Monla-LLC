@@ -20,6 +20,7 @@ import categoryRouter from "./Routes/categoryRoutes.js";
 import companyRoutes from "./Routes/companyRoutes.js";
 import shippingRoutes from "./Routes/shippingRoutes.js";
 import orderRoutes from './Routes/orderRoutes.js'
+import { Numbers } from "./Controllers/NubmersController.js";
 
 
 const app = express();
@@ -46,6 +47,7 @@ app.listen(PORT, (error) =>{
 } 
 );
 connectDB()
+// app.get('/numbers',Numbers.getNumbers)
 app.use('/product',productRoutes)
 app.use("/user", userRoutes);
 app.use("/model",modelRoutes)

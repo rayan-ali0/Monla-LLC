@@ -8,7 +8,7 @@ export const orderController = {
         const { userName, userEmail, total, shippingId, userPhone, address, userId, productsOrdered } = req.body
         // const orderedDate = new Date()
         // const user = await User.findById({ _id: userId })
-        const orders = await Order.find()   
+        const orders = await Order.find()
         // let total = 0,
         let count = orders.length + 1
         // for (let product in productsOrdered)
@@ -26,7 +26,7 @@ export const orderController = {
                 userId,
                 productsOrdered
             })
-            if (newOrder ) {
+            if (newOrder) {
                 for (let i = 0; i < productsOrdered.length; i++) {
                     const product = await Product.findById(productsOrdered[i].productId)
                     if (product) {
@@ -146,19 +146,33 @@ export const orderController = {
         const id = req.params.id
         try {
             const removeOrder = await Order.findById(id)
-            if(removeOrder){
-                removeOrder.status!=="delivered" || removeOrder.status!=="rejected" &&
-                res.status(400).json({message:"You can only delete delivered or rejected Orders"})
-await  Order.deleteOne({_id:removeOrder._id})
-res.status(200).send(`Order with ID ${id} has been deleted successfully!`) 
+            if (removeOrder) {
+                removeOrder.status !== "delivered" || removeOrder.status !== "rejected" &&
+                    res.status(400).json({ message: "You can only delete delivered or rejected Orders" })
+                await Order.deleteOne({ _id: removeOrder._id })
+                res.status(200).send(`Order with ID ${id} has been deleted successfully!`)
 
             }
-        //     removeOrder ? res.status(200).send(`Order with ID ${id} has been deleted successfully!`) :
-        //         res.status(400).send(`Error occured or Order with ID ${id} is not found!`)
-        // 
+            //     removeOrder ? res.status(200).send(`Order with ID ${id} has been deleted successfully!`) :
+            //         res.status(400).send(`Error occured or Order with ID ${id} is not found!`)
+            // 
         }
         catch (error) {
             res.status(404).json({ status: 404, error: error })
+        }
+    }
+    ,
+    recents: async (req, res) => {
+        try {
+            const recentsOrders = await Order.find().sort({ createdAt: -1 }).limit(6).populate(["shippingId"])
+            if (recentsOrders) {
+              return  res.status(200).json(recentsOrders)
+            }
+           return res.status(404).json({ message: "Error fetching recents Orders" })
+
+        }
+        catch (error) {
+          return  res.status(404).json({ status: 404, error: error })
         }
     }
 }
