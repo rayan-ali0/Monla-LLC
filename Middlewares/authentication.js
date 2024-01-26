@@ -60,7 +60,7 @@ export const login = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { _id: user._id, role: user.role },
+      { _id: user._id, role: user.role , email, name: user.name},
       process.env.SECRET_TOKEN,
       {
         expiresIn: "24h",
@@ -91,25 +91,25 @@ export const authenticateUser = (req, res, next) => {
   }
 };
 
-// export const loggedInUser = (req, res) => {
-//   return res.json({ user: req.user }).status(200);
-// };
-
-export const loggedInUser = async (req, res) => {
-  try {
-
-    const user = await User.findById(req.user._id);
-
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
-    return res.json({ user }).status(200);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json(error.message);
-  }
+export const loggedInUser = (req, res) => {
+  return res.json({ user: req.user }).status(200);
 };
+
+// export const loggedInUser = async (req, res) => {
+//   try {
+
+//     const user = await User.findById(req.user._id);
+
+//     if (!user) {
+//       return res.status(404).json({ error: "User not found" });
+//     }
+
+//     return res.json({ user }).status(200);
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).json(error.message);
+//   }
+// };
 
 
 export const logOut = (req, res) => {
