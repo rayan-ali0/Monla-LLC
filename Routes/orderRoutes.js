@@ -12,5 +12,5 @@ orderRoutes.get('/byUserId', verifyToken, checkRole(["admin"]), orderController.
 orderRoutes.get('/byDate', verifyToken, checkRole(["admin"]), orderController.getOrdersByDate)
 orderRoutes.patch('/update/:id', orderController.updateOrder)
 orderRoutes.delete('/delete/:id', orderController.deleteOrder)
-
+orderRoutes.get('/recents/all',orderController.recents)
 export default orderRoutes
