@@ -103,62 +103,60 @@ export const orderController = {
     },
 
     updateOrder: async (req, res) => {
-        const id = req.params.id
-        // const { address, status, productsOrdered } = req.body
-        const { status } = req.body
-
-        let deliverDate = null
-        // for (let product in productsOrdered)
-        //     total += (product[i].quantity * product[i].price)
+        const id = req.params.id;
+        const { status } = req.body;
+        let deliverDate = null;
+    
         try {
             if (status === 'delivered') {
-                deliverDate = new Date()
+                deliverDate = new Date();
             }
             if (status === 'rejected') {
-                const order = await Order.findById(id)
+                const order = await Order.findById(id);
                 if (order) {
                     for (let i = 0; i < order.productsOrdered.length; i++) {
-                        const product = await Product.findById(order.productsOrdered[i].productId)
+                        const product = await Product.findById(order.productsOrdered[i].productId);
                         if (product) {
-                            product.stock += order.productsOrdered[i].quantity
-                            await product.save()
+                            product.stock += order.productsOrdered[i].quantity;
+                            await product.save();
                         }
                     }
-
                 }
             }
+    
             const editOrder = await Order.findByIdAndUpdate(id, {
                 status,
                 deliverDate,
-            })
-            if(editOrder){
-                res.status(200).json({message:" Your Order has been succesfuly updated"})
+            });
+    
+            if (editOrder) {
+                return res.status(200).json({ message: "Your Order has been successfully updated" });
             }
-            res.status(400).send(`Error occured or Order with ID ${id} is not found!`)
-
-        }
-        catch (error) {
-            res.status(404).json({message:error.message })
+    
+            return res.status(400).send(`Error occurred or Order with ID ${id} is not found!`);
+        } catch (error) {
+            return res.status(404).json({ message: error.message });
         }
     },
+    
 
     deleteOrder: async (req, res) => {
-        const id = req.params.id
+        const id = req.params.id;
         try {
-            const removeOrder = await Order.findById(id)
-            if(removeOrder){
-                removeOrder.status!=="delivered" || removeOrder.status!=="rejected" &&
-                res.status(400).json({message:"You can only delete delivered or rejected Orders"})
-await  Order.deleteOne({_id:removeOrder._id})
-res.status(200).send(`Order with ID ${id} has been deleted successfully!`) 
-
+            const removeOrder = await Order.findById(id);
+            if (removeOrder) {
+                if (removeOrder.status !== "delivered" && removeOrder.status !== "rejected") {
+                    return res.status(400).json({ message: "You can only delete delivered or rejected Orders" });
+                }
+    
+                await Order.deleteOne({ _id: removeOrder._id });
+                return res.status(200).send(`Order with ID ${id} has been deleted successfully!`);
             }
-        //     removeOrder ? res.status(200).send(`Order with ID ${id} has been deleted successfully!`) :
-        //         res.status(400).send(`Error occured or Order with ID ${id} is not found!`)
-        // 
-        }
-        catch (error) {
-            res.status(404).json({ status: 404, error: error })
+            
+            // If removeOrder is null, the order with the given ID was not found
+            return res.status(400).json({ message: `Error occurred or Order with ID ${id} is not found!` });
+        } catch (error) {
+            return res.status(404).json({ status: 404, error: error.message });
         }
     }
 }
