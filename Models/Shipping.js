@@ -15,6 +15,11 @@ const Shipping = new Schema({
     type: Number,
     required: true,
   }
-});
+}
+,
+{
+    timestamps:true
+}
+);
 
 export default mongoose.model("Shipping", Shipping);

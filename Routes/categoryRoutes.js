@@ -6,8 +6,8 @@ const categoryRouter=express.Router()
 
 categoryRouter.post("/addCategory", uploadImage.single("image"),categoryController.createCategory)
 categoryRouter.get("/readCategory", categoryController.getCategory)
-categoryRouter.get("/readCategoryById:id", categoryController.getCategoryById)
+categoryRouter.get("/readCategoryById/:id", categoryController.getCategoryById)
 categoryRouter.put("/updateCategory", categoryController.updateCategory)
-categoryRouter.delete("/deleteCategory", categoryController.deleteCategory)
+categoryRouter.delete("/deleteCategory/:id", categoryController.deleteCategory)
 
 export default categoryRouter

@@ -33,14 +33,13 @@ export const productController = {
                 Model.findById(model),
                 Year.findById(year),
             ]);
-
-
+   
             // If any of the referenced models doesn't exist, return an error
             if (!categoryExists || !brandExists || !modelExists || !yearExists) {
                 return res.status(400).json({ error: "Invalid reference for category, brand, model, or year." });
             }
             const titleExist = await Product.find({ title: title })
-            if (titleExist) {
+            if (titleExist.length > 0) {
                 return res.status(400).json({ message: "Title already exist" })
 
             }
@@ -74,7 +73,7 @@ export const productController = {
             res.status(201).json(savedProduct);
         } catch (error) {
             console.error("Error creating product:", error);
-            res.status(500).json({ error: "Internal Server Error" });
+            res.status(500).json( error.message);
         }
     }
 
@@ -96,7 +95,9 @@ export const productController = {
     ,
     getProducts: async (req, res) => {
         try {
-            const products = await Product.find().populate(['category', 'brand', 'model', 'year']);
+            const offset= req.offset || 0;
+            const limit = req.limit || 10
+            const products = await Product.find().limit(limit).skip(offset).populate(['category', 'brand', 'model', 'year']).exec();
 
             if (products.length === 0) {
                 // Change status to 404 and provide an appropriate message
@@ -147,9 +148,9 @@ export const productController = {
             return res.status(400).json({ message: "Title already exist" })
 
         }
-        if(title){
-            const slug = slugify(`${title}`, {lower: true})
-            updatedFields.slug=slug
+        if (title) {
+            const slug = slugify(`${title}`, { lower: true })
+            updatedFields.slug = slug
 
         }
         if (editedProduct) {
@@ -193,7 +194,7 @@ export const productController = {
             query.brand = brand
         }
         try {
-            const products = await Product.find(query).limit(5)
+            const products = await Product.find(query).limit(5).populate(['category', 'brand', 'model', 'year'])
             res.status(200).json(products)
         }
         catch (error) {
