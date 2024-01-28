@@ -9,5 +9,5 @@ brandRouter.get("/readBrand", brandController.getBrand)
 brandRouter.get("/readBrandById:id", brandController.getBrandById)
 brandRouter.put("/updateBrand:id", brandController.updateBrand)
 brandRouter.delete("/delete/:id", brandController.deleteBrand)
-
+brandRouter.get('/readByCategory/:categoryId',brandController.getBrandByCategory)
 export default brandRouter
