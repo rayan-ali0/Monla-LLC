@@ -33,7 +33,7 @@ console.log(req.file.path)
             }
 
             // Check if the category, brand, model, and year exist
-            if(brand && model && year){
+            if (brand  && model  && year ) {
                 const [ brandExists, modelExists, yearExists] = await Promise.all([
                     Brand.findById(brand),
                     Model.findById(model),
@@ -136,14 +136,17 @@ console.log(req.file.path)
     }
     ,
     editProduct: async (req, res) => {
-        const { id, title, description, price, SKU, stock, origin, volume, category, brand, model, year } = req.body
+        const {id}=req.body
+        // const { id, title, description, price, SKU, stock, origin, volume, category, brand, model, year } = req.body
 
-        const updatedFields = { title, description, price, SKU, stock, volume, origin, category, brand, model, year }
+        const updatedFields = {...req.body }
+        delete updatedFields.id;
+
         const editedProduct = await Product.findById(id)
         if (req.file) {
             updatedFields.image = req.file.path
         }
-        if (SKU) {
+        if (req.body.SKU) {
             const skuExist = await Product.findOne({ SKU: SKU })
             console.log(skuExist._id.toString() === id)
             console.log(SKU)
@@ -151,13 +154,14 @@ console.log(req.file.path)
                 res.status(500).json({ message: "SKU Already Exist" })
             }
         }
-        const titleExist = await Product.find({ title: title })
-        if (titleExist) {
+        const titleExist = await Product.find({ title: req.body.title })
+        console.log(titleExist)
+        if (titleExist.length>0) {
             return res.status(400).json({ message: "Title already exist" })
 
         }
-        if (title) {
-            const slug = slugify(`${title}`, { lower: true })
+        if (req.body.title) {
+            const slug = slugify(`${req.body.title}`, { lower: true })
             updatedFields.slug = slug
 
         }
@@ -168,14 +172,14 @@ console.log(req.file.path)
                 if (updated && req.file) {
                     fs.unlinkSync(oldImage)
                 }
-                res.status(200).json(updated)
+               return res.status(200).json(updated)
             }
             catch (error) {
-                res.status(500).json({ message: error.message })
+                return res.status(500).json({ message: error.message })
             }
         }
         else {
-            res.status(500).json({ message: "Product Not Found" })
+          return  res.status(500).json({ message: "Product Not Found" })
 
         }
     }
