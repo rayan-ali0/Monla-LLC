@@ -1,13 +1,15 @@
 import User from "../Models/User.js";
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 export const userController = {
   register: async (req, res) => {
     const { name, email, number, address, password, role } = req.body;
     try {
-      if (!password || typeof password !== 'string') {
-        return res.status(400).json({ error: "Invalid password in the request body" });
+      if (!password || typeof password !== "string") {
+        return res
+          .status(400)
+          .json({ error: "Invalid password in the request body" });
       }
       const existingUser = await User.findOne({ email });
       if (existingUser) {
@@ -25,31 +27,39 @@ export const userController = {
       });
       await newUser.save();
 
-      const isSecure = process.env.NODE_ENV === 'production';
-      const token = jwt.sign({ userId: newUser._id, role: newUser.role,email, name }, process.env.SECRET_TOKEN, { expiresIn: '24h' });
-      res.cookie('token', token, { httpOnly: true, secure: isSecure, sameSite: 'None' });
-  
+      const isSecure = process.env.NODE_ENV === "production";
+      const token = jwt.sign(
+        { _id: newUser._id, role: newUser.role, email, name },
+        process.env.SECRET_TOKEN,
+        { expiresIn: "24h" }
+      );
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: isSecure,
+        sameSite: "None",
+      });
+
       res.status(201).json(newUser);
     } catch (error) {
       console.log(error);
       res.status(500).json({ error: "Internal Server Error" });
     }
   },
-  getOneUser: async ( req,res)=>{
+  getOneUser: async (req, res) => {
     const userId = req.user._id;
-    try{
-        const user = await User.findById(userId)
-        if (user) {
-            res.status(200).json(user);
-          } else {
-            res.status(404).json({ error: "User not found" });
-          }
-        } catch (error) {
-          console.log(error);
-          res.status(500).json({ error: "Internal Server Error"+error.message });
+    try {
+      const user = await User.findById(userId);
+      if (user) {
+        res.status(200).json(user);
+      } else {
+        res.status(404).json({ error: "User not found" });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: "Internal Server Error" + error.message });
     }
   },
-  
+
   // Get all users
   getAllUsers: async (req, res) => {
     try {
@@ -77,22 +87,47 @@ export const userController = {
   // Update a user by ID
   updateUserById: async (req, res) => {
     try {
+      const { name, number, address, password, oldPasswordInput, role } = req.body;
+  
+      if (password && (typeof password !== "string" || password.length === 0)) {
+        return res.status(400).json({ message: "Invalid password in the request body" });
+      }
+  
+      const user = await User.findById(req.params.id);
+  
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+  
+      const isOldPasswordValid = await bcrypt.compare(oldPasswordInput, user.password);
+  
+      if (!isOldPasswordValid) {
+        return res.status(401).json({ message: "Invalid old password" });
+      }
+  
+      const hashedPassword = password
+        ? await bcrypt.hash(password, 10)
+        : undefined;
+  
       const updatedUser = await User.findByIdAndUpdate(
         req.params.id,
-        req.body,
+        {
+          name,
+          number,
+          address,
+          ...(hashedPassword && { password: hashedPassword }),
+          role,
+        },
         {
           new: true,
         }
       );
-      if (!updatedUser) {
-        res.status(404).json({ message: "User not found" });
-        return;
-      }
+  
       res.status(200).json(updatedUser);
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
-  },
+  },  
 
   // Delete a user by ID
   deleteUserById: async (req, res) => {

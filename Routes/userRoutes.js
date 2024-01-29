@@ -6,8 +6,8 @@ export const userRoutes = express.Router();
 
 userRoutes.post('/register', userController.register);
 userRoutes.get('/all', verifyToken, checkRole(["admin"]), userController.getAllUsers);
-userRoutes.get('/:id', verifyToken, checkRole(["admin"]), userController.getUserById);
-userRoutes.put('/:id', verifyToken, checkRole(["admin"]), userController.updateUserById);
+userRoutes.get('/:id', verifyToken, userController.getUserById);
+userRoutes.put('/:id', verifyToken, userController.updateUserById);
 userRoutes.delete('/:id', verifyToken, checkRole(["admin"]), userController.deleteUserById);
 
 userRoutes.get('/read/one', verifyToken, userController.getOneUser);
