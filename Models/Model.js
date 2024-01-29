@@ -13,6 +13,11 @@ const Model = new Schema({
         ref: 'Brand'   
      },
     
-});
+}
+,
+{
+    timestamps:true
+}
+);
 
 export default mongoose.model("Model", Model);

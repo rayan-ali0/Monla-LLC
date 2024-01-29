@@ -26,8 +26,8 @@ export const userController = {
       await newUser.save();
 
       const isSecure = process.env.NODE_ENV === 'production';
-      const token = jwt.sign({ userId: newUser._id, role: newUser.role }, process.env.SECRET_TOKEN, { expiresIn: '24h' });
-      res.cookie('access_token', token, { httpOnly: true, secure: isSecure, sameSite: 'None' });
+      const token = jwt.sign({ userId: newUser._id, role: newUser.role,email, name }, process.env.SECRET_TOKEN, { expiresIn: '24h' });
+      res.cookie('token', token, { httpOnly: true, secure: isSecure, sameSite: 'None' });
   
       res.status(201).json(newUser);
     } catch (error) {

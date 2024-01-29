@@ -75,6 +75,9 @@ const Product = new Schema({
         required:false
     }
 
+},
+{
+    timestamps:true
 }
 )
 

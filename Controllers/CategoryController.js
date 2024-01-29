@@ -37,7 +37,6 @@ export const categoryController={
         }
     },
     updateCategory: async (req, res) => {
-        const { categoryId } = req.body;
         const image=req.file.path
         const { id } = req.params;
     
@@ -47,7 +46,6 @@ export const categoryController={
             if (!category) {
                 return res.status(404).json("Category not found");
             }
-                category.categoryId = categoryId;
             
     
             const updatedCategory = await category.save();
@@ -60,6 +58,12 @@ export const categoryController={
     ,
     deleteCategory:async(req,res)=>{
         const {id}=req.params
+        if(!id){
+            return res.status(500).json({
+                message: "Error! can't find id, not valid"
+            })
+        }
+        console.log("entering try with: ", id);
         try {
             const deletedCategory= await Category.findByIdAndDelete(id)
             if(!deletedCategory){

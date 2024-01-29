@@ -26,6 +26,11 @@ const User = new Schema({
         enum: ['user', 'admin'],
         default: 'user'
     },
+}
+,
+{
+    timestamps:true
 });
+
 
 export default mongoose.model("User", User);

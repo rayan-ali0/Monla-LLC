@@ -19,10 +19,11 @@ import { loggedInUser } from "./Middlewares/authentication.js";
 import categoryRouter from "./Routes/categoryRoutes.js";
 import companyRoutes from "./Routes/companyRoutes.js";
 import shippingRoutes from "./Routes/shippingRoutes.js";
+import orderRoutes from './Routes/orderRoutes.js'
+import { Numbers } from "./Controllers/NubmersController.js";
+
 
 const app = express();
-
-app.use(express.json());
 
 const corsOption = {
   origin: "http://localhost:5173",
@@ -31,8 +32,9 @@ const corsOption = {
 };
 
 app.use(cors(corsOption));
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(express.json())
+app.use(bodyParser.urlencoded({extended: true}));
 
 const PORT = process.env.PORT;
 
@@ -45,6 +47,7 @@ app.listen(PORT, (error) =>{
 } 
 );
 connectDB()
+// app.get('/numbers',Numbers.getNumbers)
 app.use('/product',productRoutes)
 app.use("/user", userRoutes);
 app.use("/model",modelRoutes)
@@ -52,7 +55,7 @@ app.use("/year",yearRoutes)
 app.use("/brand", brandRouter)
 app.use("/google",addUser)
 app.post("/login", login);
-app.get("/logout", logOut);
+app.post("/logout", logOut);
 app.use("/service", serviceRoutes);
 app.use('/contact',contactRoutes)
 app.use('/images',express.static('images'))
@@ -62,6 +65,7 @@ app.use("/logged-in-user", verifyToken, loggedInUser);
 app.use("/category", categoryRouter)
 app.use('/company', companyRoutes);
 app.use('/shipping', shippingRoutes);
+app.use('/order', orderRoutes);
 
 app.use("/brand", brandRouter)
 app.get("/logout", logOut);
