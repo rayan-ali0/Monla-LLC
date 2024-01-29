@@ -87,7 +87,7 @@ export const userController = {
   // Update a user by ID
   updateUserById: async (req, res) => {
     try {
-      const { name, email, number, address, password, oldPasswordInput, role } = req.body;
+      const { name, number, address, password, oldPasswordInput, role } = req.body;
   
       if (password && (typeof password !== "string" || password.length === 0)) {
         return res.status(400).json({ message: "Invalid password in the request body" });
@@ -113,7 +113,6 @@ export const userController = {
         req.params.id,
         {
           name,
-          email,
           number,
           address,
           ...(hashedPassword && { password: hashedPassword }),
