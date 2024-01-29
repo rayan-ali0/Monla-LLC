@@ -1,4 +1,5 @@
 import express from "express";
+import session from 'express-session';
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import "dotenv/config";
@@ -23,6 +24,12 @@ import orderRoutes from './Routes/orderRoutes.js'
 
 
 const app = express();
+
+app.use(session({
+    secret: 'your-secret-key',
+    resave: false,
+    saveUninitialized: false,
+  }));
 
 const corsOption = {
   origin: "http://localhost:5173",
@@ -58,7 +65,7 @@ app.use("/service", serviceRoutes);
 app.use('/contact',contactRoutes)
 app.use('/images',express.static('images'))
 
-app.use("/logged-in-user", verifyToken, loggedInUser);
+app.get("/logged-in-user", verifyToken, loggedInUser);
 
 app.use("/category", categoryRouter)
 app.use('/company', companyRoutes);
