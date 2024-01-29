@@ -28,6 +28,7 @@ try{
         res.status(200).json({
             ordersNumber,
             totalStock,
+            productsNb,
             deliveredNb,
             usersNb
         })

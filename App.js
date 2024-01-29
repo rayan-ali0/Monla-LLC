@@ -47,7 +47,7 @@ app.listen(PORT, (error) =>{
 } 
 );
 connectDB()
-// app.get('/numbers',Numbers.getNumbers)
+app.get('/numbers',Numbers.getNumbers)
 app.use('/product',productRoutes)
 app.use("/user", userRoutes);
 app.use("/model",modelRoutes)
