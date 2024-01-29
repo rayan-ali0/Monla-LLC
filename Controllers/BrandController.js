@@ -39,26 +39,30 @@ export const brandController={
         }
     }
 ,
-    updateBrand:async(req,res)=>{
-        const {name, categoryId}=req.body
-        const image=req.file.path
-        const {id}=req.params
-        try {
-            const brand= await Brand.findById(id)
-            if(!brand){
-                return res.status(404).json("Brand not found");
-            }
-            if(name) brand.name =name;
-            if(categoryId) brand.categoryId= categoryId;
-            if(image) brand.image=image;
+updateBrand: async (req, res) => {
+    const { name, categoryId } = req.body;
+    const image = req.file ? req.file.path : null; // Check if req.file exists
+    const { id } = req.params;
 
-            const updatedBrand= await brand.save()
+    try {
+        const brand = await Brand.findById(id);
 
-            res.status(200).json(updatedBrand);
-        } catch (error) {
-            res.status(500).json(error.message);
+        if (!brand) {
+            return res.status(404).json("Brand not found");
         }
+
+        if (name) brand.name = name;
+        if (categoryId) brand.categoryId = categoryId;
+        if (image) brand.image = image;
+
+        const updatedBrand = await brand.save();
+
+        res.status(200).json(updatedBrand);
+    } catch (error) {
+        res.status(500).json(error.message);
     }
+}
+
 ,
     deleteBrand:async(req,res)=>{
         const {id}=req.params;
