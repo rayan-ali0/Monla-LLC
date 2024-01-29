@@ -39,6 +39,7 @@ export const categoryController={
     updateCategory: async (req, res) => {
         // const { categoryId } = req.body;
         const image=req.file.path
+        const {title}= req.body
         const { id } = req.params;
     
         try {
@@ -48,6 +49,8 @@ export const categoryController={
                 return res.status(404).json("Category not found");
             }
                 // category.categoryId = categoryId;
+                if(title) category.title= title;
+                if(image) category.image=image
             
     
             const updatedCategory = await category.save();
