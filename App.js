@@ -75,5 +75,5 @@ app.use('/shipping', shippingRoutes);
 app.use('/order', orderRoutes);
 
 app.use("/brand", brandRouter)
-app.get("/logout", logOut);
+app.post("/logout", logOut);
 app.use("/google",addUser)
