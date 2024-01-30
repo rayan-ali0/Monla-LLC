@@ -94,10 +94,10 @@ console.log(req.file.path)
             if (!product) {
                 res.status(400).json({ message: "Product Not Found" })
             }
-            res.status(200).json(product)
+           return res.status(200).json(product)
         }
         catch (error) {
-            res.status(404).json({ message: error.message })
+         return   res.status(404).json({ message: error.message })
         }
     }
     ,
@@ -112,9 +112,9 @@ console.log(req.file.path)
                 return res.status(404).json("Products Not Found");
             }
 
-            res.status(200).json(products);
+         return   res.status(200).json(products);
         } catch (error) {
-            res.status(500).json(error.message);
+            return res.status(500).json(error.message);
         }
     }
 
@@ -125,38 +125,39 @@ console.log(req.file.path)
         try {
             const deletedProduct = await Product.findByIdAndDelete(id);
             if (!deletedProduct) {
-                res.status(404).json({ error: 'Product not found' })
+             return   res.status(404).json({ error: 'Product not found' })
             }
             fs.unlinkSync(deletedProduct.image)
-            res.status(200).json({ message: "Product Deleted" })
+           return res.status(200).json({ message: "Product Deleted" })
         }
         catch (error) {
-            res.status(404).json(error.message)
+          return  res.status(404).json(error.message)
         }
     }
     ,
     editProduct: async (req, res) => {
-        const {id}=req.body
+        const id=req.body._id
         // const { id, title, description, price, SKU, stock, origin, volume, category, brand, model, year } = req.body
-
+// console.log(req.body)
         const updatedFields = {...req.body }
-        delete updatedFields.id;
-
+        delete updatedFields._id;
+// console.log(updatedFields)
         const editedProduct = await Product.findById(id)
         if (req.file) {
             updatedFields.image = req.file.path
         }
         if (req.body.SKU) {
-            const skuExist = await Product.findOne({ SKU: SKU })
-            console.log(skuExist._id.toString() === id)
-            console.log(SKU)
+            const skuExist = await Product.findOne({ SKU: req.body.SKU })
+            // console.log(id)
+            // console.log(skuExist._id.toString() === id)
+            // console.log(skuExist)
             if (skuExist && (skuExist._id).toString() !== id) {
-                res.status(500).json({ message: "SKU Already Exist" })
+             return   res.status(500).json({ message: "SKU Already Exist" })
             }
         }
-        const titleExist = await Product.find({ title: req.body.title })
+        const titleExist = await Product.findOne({ title: req.body.title })
         console.log(titleExist)
-        if (titleExist.length>0) {
+        if (titleExist && titleExist._id.toString()!==id) {
             return res.status(400).json({ message: "Title already exist" })
 
         }
@@ -188,10 +189,10 @@ console.log(req.file.path)
         let category = req.params;
         try {
             const products = await Product.find({ category: category })
-            res.status(200).json(products)
+          return  res.status(200).json(products)
         }
         catch (error) {
-            res.status(404).json({ status: 404, error: error })
+          return  res.status(404).json({ status: 404, error: error })
         }
     }
     ,
@@ -207,10 +208,10 @@ console.log(req.file.path)
         }
         try {
             const products = await Product.find(query).limit(5).populate(['category', 'brand', 'model', 'year'])
-            res.status(200).json(products)
+            return  res.status(200).json(products)
         }
         catch (error) {
-            res.status(404).json({ status: 400, error: error.message })
+            return   res.status(404).json({ status: 400, error: error.message })
         }
     }
     ,
@@ -240,10 +241,10 @@ console.log(req.file.path)
             console.log("Search criteria:", searchBy);
             const products = await Product.find(searchBy);
             console.log("Found products:", products);
-            res.status(200).json(products);
+            return  res.status(200).json(products);
         } catch (error) {
             console.error("Error fetching products:", error);
-            res.status(404).json({ message: error.message });
+            return res.status(404).json({ message: error.message });
         }
     }
     
