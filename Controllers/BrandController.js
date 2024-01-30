@@ -39,6 +39,19 @@ export const brandController={
         }
     }
 ,
+getBrandByCategory:async(req,res)=>{
+    const {categoryId}=req.params
+    try {
+        const  brand= await Brand.find({categoryId:categoryId})
+        if(brand){
+           return res.status(200).json(brand)
+        }
+        return res.status(400).json("not found")
+    } catch (error) {
+        return res.status(404).json(error.message)
+    }
+}
+,
     updateBrand:async(req,res)=>{
         const {name, categoryId}=req.body
         const image=req.file.path

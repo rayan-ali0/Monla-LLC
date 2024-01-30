@@ -23,21 +23,29 @@ export const productController = {
                 volume
             } = req.body;
 
-            const image = req.file.path;
+            // const image = req.file;
+console.log(req.file.path)
 
+            const categoryExists = await  Category.findById(category)
+            if(!categoryExists){
+                return res.status(400).json({ message: "Invalid reference for category." });
+
+            }
 
             // Check if the category, brand, model, and year exist
-            const [categoryExists, brandExists, modelExists, yearExists] = await Promise.all([
-                Category.findById(category),
-                Brand.findById(brand),
-                Model.findById(model),
-                Year.findById(year),
-            ]);
-   
-            // If any of the referenced models doesn't exist, return an error
-            if (!categoryExists || !brandExists || !modelExists || !yearExists) {
-                return res.status(400).json({ error: "Invalid reference for category, brand, model, or year." });
+            if (brand  && model  && year ) {
+                const [ brandExists, modelExists, yearExists] = await Promise.all([
+                    Brand.findById(brand),
+                    Model.findById(model),
+                    Year.findById(year),
+                ]);
+       
+                // If any of the referenced models doesn't exist, return an error
+                if ( !brandExists || !modelExists || !yearExists) {
+                    return res.status(400).json({ message: "Invalid reference for category, brand, model, or year." });
+                }
             }
+           
             const titleExist = await Product.find({ title: title })
             if (titleExist.length > 0) {
                 return res.status(400).json({ message: "Title already exist" })
@@ -55,7 +63,7 @@ export const productController = {
             const newProduct = new Product({
                 title,
                 description,
-                image,
+                image:req.file.path,
                 price,
                 SKU,
                 stock,
@@ -70,10 +78,10 @@ export const productController = {
 
             const savedProduct = await newProduct.save();
 
-            res.status(201).json(savedProduct);
+           return res.status(200).json(savedProduct);
         } catch (error) {
             console.error("Error creating product:", error);
-            res.status(500).json( error.message);
+           return res.status(500).json( {message:error.message});
         }
     }
 
@@ -128,14 +136,17 @@ export const productController = {
     }
     ,
     editProduct: async (req, res) => {
-        const { id, title, description, price, SKU, stock, origin, volume, category, brand, model, year } = req.body
+        const {id}=req.body
+        // const { id, title, description, price, SKU, stock, origin, volume, category, brand, model, year } = req.body
 
-        const updatedFields = { title, description, price, SKU, stock, volume, origin, category, brand, model, year }
+        const updatedFields = {...req.body }
+        delete updatedFields.id;
+
         const editedProduct = await Product.findById(id)
         if (req.file) {
             updatedFields.image = req.file.path
         }
-        if (SKU) {
+        if (req.body.SKU) {
             const skuExist = await Product.findOne({ SKU: SKU })
             console.log(skuExist._id.toString() === id)
             console.log(SKU)
@@ -143,13 +154,14 @@ export const productController = {
                 res.status(500).json({ message: "SKU Already Exist" })
             }
         }
-        const titleExist = await Product.find({ title: title })
-        if (titleExist) {
+        const titleExist = await Product.find({ title: req.body.title })
+        console.log(titleExist)
+        if (titleExist.length>0) {
             return res.status(400).json({ message: "Title already exist" })
 
         }
-        if (title) {
-            const slug = slugify(`${title}`, { lower: true })
+        if (req.body.title) {
+            const slug = slugify(`${req.body.title}`, { lower: true })
             updatedFields.slug = slug
 
         }
@@ -160,14 +172,14 @@ export const productController = {
                 if (updated && req.file) {
                     fs.unlinkSync(oldImage)
                 }
-                res.status(200).json(updated)
+               return res.status(200).json(updated)
             }
             catch (error) {
-                res.status(500).json({ message: error.message })
+                return res.status(500).json({ message: error.message })
             }
         }
         else {
-            res.status(500).json({ message: "Product Not Found" })
+          return  res.status(500).json({ message: "Product Not Found" })
 
         }
     }
