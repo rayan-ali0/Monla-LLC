@@ -7,7 +7,7 @@ import bcrypt from "bcrypt"
     try{
         const user = await User.findOne({email: req.body.email})
         if(user){
-            const token = jwt.sign({id: user._id,role:user.role}, process.env.SECRET_TOKEN, {
+            const token = jwt.sign({_id: user._id,role:user.role}, process.env.SECRET_TOKEN, {
                       expiresIn: "24h",
                     });
             res
@@ -21,7 +21,7 @@ import bcrypt from "bcrypt"
             const hashedPassword = bcrypt.hashSync(generatedPassword, 10);
             const newUser = new User({name: req.body.name, email: req.body.email, password: hashedPassword});
             await newUser.save();
-            const token = jwt.sign({id: newUser._id,role:newUser.role}, process.env.SECRET_TOKEN, {
+            const token = jwt.sign({_id: newUser._id,role:newUser.role}, process.env.SECRET_TOKEN, {
                 expiresIn: "24h",
               });
              res
