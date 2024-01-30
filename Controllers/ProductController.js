@@ -47,7 +47,7 @@ console.log(req.file.path)
             }
            
             const titleExist = await Product.find({ title: title })
-            if (titleExist.length > 0) {
+            if (titleExist.length>0) {
                 return res.status(400).json({ message: "Title already exist" })
 
             }
@@ -215,32 +215,40 @@ console.log(req.file.path)
     }
     ,
     getByFilter: async (req, res) => {
-        const { category, volume, brand, model, year } = req.body
-        const searchBy = {}
+        const { category, volume, brand, model, year } = req.query;
+        console.log("Received parameters:", { category, volume, brand, model, year });
+    
+        const searchBy = {};
+    
         if (category) {
-            searchBy.category = category
+            searchBy.category = category;
         }
         if (volume) {
-            searchBy.volume = volume
+            searchBy.volume = volume;
         }
         if (brand) {
-            searchBy.brand = brand
+            searchBy.brand = brand;
         }
         if (model) {
-            searchBy.model = model
+            searchBy.model = model;
         }
         if (year) {
-            searchBy.year = year
+            searchBy.year = year;
         }
+    
         try {
-            const products = await Product.find(searchBy)
-            res.status(200).json(products)
-        }
-        catch (error) {
-            res.status(404).json({ message: error.message })
-
+            console.log("Search criteria:", searchBy);
+            const products = await Product.find(searchBy);
+            console.log("Found products:", products);
+            res.status(200).json(products);
+        } catch (error) {
+            console.error("Error fetching products:", error);
+            res.status(404).json({ message: error.message });
         }
     }
+    
+    
+    
 
 
 
