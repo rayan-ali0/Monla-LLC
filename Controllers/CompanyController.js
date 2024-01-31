@@ -46,7 +46,7 @@ export const companyController = {
 
   getCompany: async (req, res) => {
     try {
-      const existingCompany = await Company.findOne();
+      const existingCompany = await Company.find();
   
       if (!existingCompany) {
         return res.status(404).json({ error: 'Company not found.' });
@@ -103,14 +103,11 @@ export const companyController = {
   },
 
   deleteCompany: async (req, res) => {
+    const id = req.params.id
     try {
-      const deletedCompany = await Company.deleteOne();
-
-      if (!deletedCompany.deletedCount) {
-        return res.status(404).json({ error: "Company not found." });
-      }
-
-      res.json({ message: "Company deleted successfully." });
+      const company = await Company.findByIdAndDelete({ _id: id })
+      company ? res.json({ message: "Company deleted successfully." }) :
+        res.json({ message: "Error in Deleting." })
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Internal Server Error" });

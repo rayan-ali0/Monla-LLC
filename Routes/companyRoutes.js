@@ -7,7 +7,7 @@ const companyRoutes = express.Router();
 
 companyRoutes.post('/create',  companyController.createCompany);
 companyRoutes.get('/', companyController.getCompany);
-companyRoutes.put('/edit', companyController.editCompany);
-companyRoutes.delete('/delete', verifyToken, checkRole(["admin"]), companyController.deleteCompany);
+companyRoutes.put('/:id', companyController.editCompany);
+companyRoutes.delete('/:id', companyController.deleteCompany);
 
 export default companyRoutes;
