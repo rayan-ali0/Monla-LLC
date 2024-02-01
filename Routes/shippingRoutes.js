@@ -8,7 +8,7 @@ const shippingRoutes = express.Router();
 shippingRoutes.post("/create", verifyToken, checkRole(["admin"]), shippingController.createShipping);
 shippingRoutes.get("/all", shippingController.getAllShippings);
 shippingRoutes.get("/:id", shippingController.getShippingById);
-shippingRoutes.put("/:id", verifyToken, checkRole(["admin"]), shippingController.updateShipping);
+shippingRoutes.put("/:id",  shippingController.updateShipping);
 shippingRoutes.delete("/:id", verifyToken, checkRole(["admin"]), shippingController.deleteShipping);
 
 export default shippingRoutes;

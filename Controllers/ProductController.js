@@ -137,20 +137,14 @@ console.log(req.file.path)
     ,
     editProduct: async (req, res) => {
         const id=req.body._id
-        // const { id, title, description, price, SKU, stock, origin, volume, category, brand, model, year } = req.body
-// console.log(req.body)
         const updatedFields = {...req.body }
         delete updatedFields._id;
-// console.log(updatedFields)
         const editedProduct = await Product.findById(id)
         if (req.file) {
             updatedFields.image = req.file.path
         }
         if (req.body.SKU) {
             const skuExist = await Product.findOne({ SKU: req.body.SKU })
-            // console.log(id)
-            // console.log(skuExist._id.toString() === id)
-            // console.log(skuExist)
             if (skuExist && (skuExist._id).toString() !== id) {
              return   res.status(500).json({ message: "SKU Already Exist" })
             }

@@ -8,9 +8,9 @@ export const brandController={
         const image=req.file.path
         try {
             const brand= await Brand.create({brand:name,  image})
-            res.status(200).json(brand)
+          return  res.status(200).json(brand)
         } catch (error) {
-            res.status(404).json(error.message)
+           return res.status(404).json(error.message)
            
         }
     }

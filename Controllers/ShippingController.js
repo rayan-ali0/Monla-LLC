@@ -49,10 +49,10 @@ export const shippingController = {
       if (!updatedShipping) {
         return res.status(404).json({ error: "Shipping not found" });
       }
-      res.status(200).json(updatedShipping);
+      return res.status(200).json(updatedShipping);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: "Internal Server Error" });
+      return res.status(500).json({ error: "Internal Server Error" });
     }
   },
 

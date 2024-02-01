@@ -40,18 +40,18 @@ export const orderController = {
                 }
             }
             await newOrder.save()
-          return  res.status(200).json({ message: 'Your Order has been created successfuly!', Order: newOrder })            // newOrder ? res.status(200).json({ message: 'New Order has been created!', Order: newOrder }) :
+            return res.status(200).json({ message: 'Your Order has been created successfuly!', Order: newOrder })            // newOrder ? res.status(200).json({ message: 'New Order has been created!', Order: newOrder }) :
 
         }
         catch (error) {
-         return   res.status(404).json({ message: error.message })
+            return res.status(404).json({ message: error.message })
         }
     },
 
     getAllOrders: async (req, res) => {
         try {
             const orders = await Order.find()
-          return  res.status(200).json({ Orders: orders })
+            return res.status(200).json({ Orders: orders })
         }
         catch (error) {
             return res.status(404).json({ status: 404, error: error })
@@ -61,10 +61,10 @@ export const orderController = {
         const id = req.params.id
         try {
             const order = await Order.findById(id)
-            if(order){
+            if (order) {
                 return res.status(200).json({ Order: order })
             }
-            else{
+            else {
                 res.status(404).send(`Order with ID ${id} is not found!`)
 
             }
@@ -79,18 +79,18 @@ export const orderController = {
         const orderNumber = req.body.orderNumber
         try {
             const order = await Order.findOne({ orderNumber: orderNumber })
-            if(order){
+            if (order) {
                 return res.status(200).json({ Order: order })
             }
-            else{
+            else {
                 return res.status(404).send(`Order with Order Number ${orderNumber} doesn't exist!`)
 
             }
             // order ? res.status(200).json({ Order: order }) :
-                // res.status(404).send(`Order with Order Number ${orderNumber} doesn't exist!`)
+            // res.status(404).send(`Order with Order Number ${orderNumber} doesn't exist!`)
         }
         catch (error) {
-            return  res.status(404).json({ status: 404, error: error })
+            return res.status(404).json({ status: 404, error: error })
         }
     },
     getOrdersByUser: async (req, res) => {
@@ -101,7 +101,7 @@ export const orderController = {
                 res.status(404).send(`Invalid UserID ${userId}!`)
         }
         catch (error) {
-            return  res.status(404).json({ status: 404, error: error })
+            return res.status(404).json({ status: 404, error: error })
         }
     },
     getOrdersByDate: async (req, res) => {
@@ -112,7 +112,7 @@ export const orderController = {
                 res.status(404).send(`No orders on date ${date} or an error occured!`)
         }
         catch (error) {
-            return  res.status(404).json({ status: 404, error: error })
+            return res.status(404).json({ status: 404, error: error })
         }
     },
 
@@ -120,7 +120,7 @@ export const orderController = {
         const id = req.params.id;
         const { status } = req.body;
         let deliverDate = null;
-    
+
         try {
             if (status === 'delivered') {
                 deliverDate = new Date();
@@ -137,38 +137,45 @@ export const orderController = {
                     }
                 }
             }
-    
+
             const editOrder = await Order.findByIdAndUpdate(id, {
                 status,
                 deliverDate,
             });
-    
+
             if (editOrder) {
                 return res.status(200).json({ message: "Your Order has been successfully updated" });
             }
-    
+
             return res.status(400).send(`Error occurred or Order with ID ${id} is not found!`);
         } catch (error) {
             return res.status(404).json({ message: error.message });
         }
     },
-    
+
 
     deleteOrder: async (req, res) => {
         const id = req.params.id;
         try {
             const removeOrder = await Order.findById(id)
             if (removeOrder) {
-                removeOrder.status !== "delivered" || removeOrder.status !== "rejected" &&
-                    res.status(400).json({ message: "You can only delete delivered or rejected Orders" })
-                await Order.deleteOne({ _id: removeOrder._id })
-                res.status(200).send(`Order with ID ${id} has been deleted successfully!`)
+                if (removeOrder.status !== "delivered" || removeOrder.status !== "rejected") {
+                    return res.status(400).json({ message: "You can only delete delivered or rejected Orders" })
+
+                }
+                else {
+                    await Order.deleteOne({ _id: removeOrder._id })
+                    return res.status(200).send(`Order with ID ${id} has been deleted successfully!`)
+
+                }
+            }
+            else{
+                return res.status(400).json({ message: "Order not found" })
 
             }
-
         }
         catch (error) {
-            return    res.status(404).json({ status: 404, error: error })
+            return res.status(404).json({ status: 404, error: error })
         }
     }
     ,
@@ -176,13 +183,13 @@ export const orderController = {
         try {
             const recentsOrders = await Order.find().sort({ createdAt: -1 }).limit(6).populate(["shippingId"])
             if (recentsOrders) {
-              return  res.status(200).json(recentsOrders)
+                return res.status(200).json(recentsOrders)
             }
-           return res.status(404).json({ message: "Error fetching recents Orders" })
+            return res.status(404).json({ message: "Error fetching recents Orders" })
 
         }
         catch (error) {
-          return  res.status(404).json({ status: 404, error: error })
+            return res.status(404).json({ status: 404, error: error })
         }
     }
 }

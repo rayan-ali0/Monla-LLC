@@ -55,9 +55,9 @@ export const categoryController={
     
             const updatedCategory = await category.save();
     
-            res.status(200).json(updatedCategory);
+            return res.status(200).json(updatedCategory);
         } catch (error) {
-            res.status(500).json(error.message);
+           return  res.status(500).json(error.message);
         }
     }
     ,
@@ -74,7 +74,7 @@ export const categoryController={
             if(!deletedCategory){
                  res.status(404).json("Not found")
             }
-            res.status(200).json({message:"Brand deleted successfully", deletedCategory    })
+            res.status(200).json({message:"Category deleted successfully", deletedCategory    })
         } catch (error) {
             res.status(404).json(error.message)
         }
