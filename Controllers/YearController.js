@@ -109,10 +109,10 @@ export const yearController = {
           return res.status(404).json({ message: 'No years found for the specified model ID.' });
         }
     
-        res.status(200).json(years);
+        return  res.status(200).json(years);
       } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Internal Server Error' });
+        // console.error(error);
+       return res.status(500).json({ message: 'Internal Server Error' });
       }
     }
     

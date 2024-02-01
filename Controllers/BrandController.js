@@ -4,10 +4,10 @@ import  path  from "path";
 
 export const brandController={
     createBrand:async(req,res)=>{
-        const {name, categoryId}=req.body
+        const {name}=req.body
         const image=req.file.path
         try {
-            const brand= await Brand.create({brand:name, categoryId, image})
+            const brand= await Brand.create({brand:name,  image})
             res.status(200).json(brand)
         } catch (error) {
             res.status(404).json(error.message)
@@ -17,7 +17,7 @@ export const brandController={
 ,
     getBrand:async(req,res)=>{
         try {
-            const  brand= await Brand.find().populate(['categoryId'])
+            const  brand= await Brand.find()
             if(brand){
                return res.status(200).json(brand)
             }
@@ -29,7 +29,7 @@ export const brandController={
     getBrandById:async(req,res)=>{
         const {id}=req.params
         try {
-            const  brand= await Brand.findById(id).populate(['categoryId'])
+            const  brand= await Brand.findById(id)
             if(brand){
                 res.status(200).json(brand)
             }
@@ -39,44 +39,34 @@ export const brandController={
         }
     }
 ,
-getBrandByCategory:async(req,res)=>{
-    const {categoryId}=req.params
-    try {
-        const  brand= await Brand.find({categoryId:categoryId})
-        if(brand){
-           return res.status(200).json(brand)
-        }
-        return res.status(400).json("not found")
-    } catch (error) {
-        return res.status(404).json(error.message)
-    }
-}
-,
+
  
-updateBrand: async (req, res) => {
-    const { name, categoryId } = req.body;
-    const image = req.file ? req.file.path : null; // Check if req.file exists
+ updateBrand : async (req, res) => {
+    const { brand } = req.body;
+    const image = req.file ? req.file.path : null;
     const { id } = req.params;
 
     try {
-        const brand = await Brand.findById(id);
+        const existingBrand = await Brand.findById(id);
 
-        if (!brand) {
-            return res.status(404).json("Brand not found");
+        if (!existingBrand) {
+            return res.status(404).json({ error: 'Brand not found' });
         }
 
-        if (name) brand.name = name;
-        if (categoryId) brand.categoryId = categoryId;
-        if (image) brand.image = image;
+        // Update the brand properties
+        existingBrand.brand = brand; 
+        if (image) {
+            existingBrand.image = image;
+        }
 
-        const updatedBrand = await brand.save();
+        // Save the updated brand
+        const updatedBrand = await existingBrand.save();
 
         res.status(200).json(updatedBrand);
     } catch (error) {
-        res.status(500).json(error.message);
+        res.status(500).json({ error: error.message });
     }
 }
-
 ,
     deleteBrand:async(req,res)=>{
         const {id}=req.params;
