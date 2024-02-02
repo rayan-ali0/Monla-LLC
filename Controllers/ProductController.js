@@ -233,7 +233,7 @@ console.log(req.file.path)
     
         try {
             console.log("Search criteria:", searchBy);
-            const products = await Product.find(searchBy);
+            const products = await Product.find(searchBy).populate(['category', 'brand', 'model', 'year']);
             console.log("Found products:", products);
             return  res.status(200).json(products);
         } catch (error) {
