@@ -99,10 +99,15 @@ export const userController = {
         return res.status(404).json({ message: "User not found" });
       }
   
-      const isOldPasswordValid = await bcrypt.compare(oldPasswordInput, user.password);
+      let isOldPasswordValid = true;
   
-      if (!isOldPasswordValid) {
-        return res.status(401).json({ message: "Invalid old password" });
+      if (password) {
+        // If a new password is provided, check the old password
+        isOldPasswordValid = await bcrypt.compare(oldPasswordInput, user.password);
+  
+        if (!isOldPasswordValid) {
+          return res.status(401).json({ message: "Invalid old password" });
+        }
       }
   
       const hashedPassword = password
@@ -127,7 +132,7 @@ export const userController = {
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
-  },  
+  },
 
   // Delete a user by ID
   deleteUserById: async (req, res) => {
