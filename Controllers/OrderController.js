@@ -157,28 +157,25 @@ export const orderController = {
     deleteOrder: async (req, res) => {
         const id = req.params.id;
         try {
-            const removeOrder = await Order.findById(id)
+            const removeOrder = await Order.findById(id);
             if (removeOrder) {
-                if (removeOrder.status !== "delivered" || removeOrder.status !== "rejected") {
-                    return res.status(400).json({ message: "You can only delete delivered or rejected Orders" })
-
+                if (removeOrder.status !== "delivered" && removeOrder.status !== "rejected") {
+                    return res.status(400).json({ message: "You can only delete delivered or rejected Orders" });
+                } else {
+                    await Order.deleteOne({ _id: removeOrder._id });
+                    return res.status(200).send(`Order with ID ${id} has been deleted successfully!`);
                 }
-                else {
-                    await Order.deleteOne({ _id: removeOrder._id })
-                    return res.status(200).send(`Order with ID ${id} has been deleted successfully!`)
-
-                }
+                
+            } else {
+                return res.status(400).json({ message: "Order not found" });
             }
-            else{
-                return res.status(400).json({ message: "Order not found" })
-
-            }
+        } catch (error) {
+            return res.status(404).json({ status: 404, error: error });
         }
-        catch (error) {
-            return res.status(404).json({ status: 404, error: error })
-        }
-    }
-    ,
+    },
+    
+    
+    
     recents: async (req, res) => {
         try {
             const recentsOrders = await Order.find().sort({ createdAt: -1 }).limit(6).populate(["shippingId"])
