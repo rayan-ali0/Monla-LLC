@@ -136,7 +136,10 @@ export const productController = {
     editProduct: async (req, res) => {
         const id=req.body._id
         const updatedFields = {...req.body }
+        console.log(updatedFields)
         delete updatedFields._id;
+        console.log(updatedFields)
+
         const editedProduct = await Product.findById(id)
         if (req.file) {
             updatedFields.image = req.file.path
@@ -170,7 +173,7 @@ export const productController = {
                 return res.status(500).json({ message: error.message })
             }
         }
-        else {
+        if(!editedProduct) {
           return  res.status(500).json({ message: "Product Not Found" })
 
         }
