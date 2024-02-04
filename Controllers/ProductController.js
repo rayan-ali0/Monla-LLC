@@ -5,6 +5,7 @@ import Brand from "../Models/Brand.js";
 import Category from "../Models/Category.js";
 import fs from "fs"
 import slugify from "slugify";
+import { query } from "express";
 export const productController = {
     createProduct: async (req, res) => {
         try {
@@ -22,9 +23,6 @@ export const productController = {
                 year,
                 volume
             } = req.body;
-
-            // const image = req.file;
-console.log(req.file.path)
 
             const categoryExists = await  Category.findById(category)
             if(!categoryExists){
@@ -150,7 +148,6 @@ console.log(req.file.path)
             }
         }
         const titleExist = await Product.findOne({ title: req.body.title })
-        console.log(titleExist)
         if (titleExist && titleExist._id.toString()!==id) {
             return res.status(400).json({ message: "Title already exist" })
 
@@ -192,7 +189,7 @@ console.log(req.file.path)
     ,
 
     getRelated: async (req, res) => {
-        const { category, brand } = req.body
+        const { category, brand } = req.query
         const query = {}
         if (category) {
             query.category = category
@@ -210,14 +207,8 @@ console.log(req.file.path)
     }
     ,
     getByFilter: async (req, res) => {
-        const { category, volume, brand, model, year } = req.query;
-        console.log("Received parameters:", { category, volume, brand, model, year });
-    
-        const searchBy = {};
-    
-        if (category) {
-            searchBy.category = category;
-        }
+        const { category, volume, brand, model, year } = req.query;    
+        let searchBy = {};
         if (volume) {
             searchBy.volume = volume;
         }
@@ -230,11 +221,19 @@ console.log(req.file.path)
         if (year) {
             searchBy.year = year;
         }
+        if (category) {
+            const categoryFound= await Category.findById(category)
+            if(categoryFound && categoryFound.title==="Lubricants & Additives"){
+                searchBy={category:category}
+            }
+            else{
+                searchBy.category = category;
+
+            }
+        }
     
         try {
-            console.log("Search criteria:", searchBy);
             const products = await Product.find(searchBy).populate(['category', 'brand', 'model', 'year']);
-            console.log("Found products:", products);
             return  res.status(200).json(products);
         } catch (error) {
             console.error("Error fetching products:", error);

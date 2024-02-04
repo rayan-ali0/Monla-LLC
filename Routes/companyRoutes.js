@@ -5,9 +5,9 @@ import { checkRole } from "../Middlewares/authentication.js";
 
 const companyRoutes = express.Router();
 
-companyRoutes.post('/create',  companyController.createCompany);
+companyRoutes.post('/create', verifyToken, checkRole(["admin"]),  companyController.createCompany);
 companyRoutes.get('/', companyController.getCompany);
-companyRoutes.put('/edit', companyController.editCompany);
+companyRoutes.put('/edit', verifyToken, checkRole(["admin"]), companyController.editCompany);
 companyRoutes.delete('/delete', verifyToken, checkRole(["admin"]), companyController.deleteCompany);
 
 export default companyRoutes;
