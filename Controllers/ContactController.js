@@ -7,15 +7,15 @@ export const contactController = {
         try {
             const contact = await Contact.create({ Name,Email,Phone,message })
             if(contact){
-                res.status(200).json(contact)
+                return   res.status(200).json(contact)
             }
             else{
-                res.status(500).json({ status: 500, error: "Error creating contact" })
+                return  res.status(500).json({ status: 500, error: "Error creating contact" })
 
             }
         }
         catch (error) {
-            res.status(404).json({ status: 404, message: error.message })
+            return   res.status(404).json({ status: 404, message: error.message })
         }
     }
     ,
@@ -23,12 +23,12 @@ export const contactController = {
         try {
             const contacts = await Contact.find();
             if (!contacts) {
-                res.status(400).json("Contacts Not Found")
+                return  res.status(400).json("Contacts Not Found")
             }
-            res.status(200).json(contacts)
+            return res.status(200).json(contacts)
         }
         catch (error) {
-            res.status(404).json({message:error.message})
+            return res.status(404).json({message:error.message})
         }
     }
     ,
@@ -37,13 +37,13 @@ export const contactController = {
         try {
             const deletedContact = await Contact.findByIdAndDelete(id);
             if (!deletedContact) {
-                res.status(404).json({ error: 'Contact not found' })
+                return   res.status(404).json({ error: 'Contact not found' })
             }
-            res.status(200).json({ status: "Contact Deleted" })
+            return  res.status(200).json({ status: "Contact Deleted" })
 
         }
         catch (error) {
-            res.status(404).json({message:error.message})
+            return res.status(404).json({message:error.message})
         }
     }
     

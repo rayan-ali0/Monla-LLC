@@ -10,7 +10,7 @@ import bcrypt from "bcrypt"
             const token = jwt.sign({_id: user._id,role:user.role}, process.env.SECRET_TOKEN, {
                       expiresIn: "24h",
                     });
-            res
+                    return  res
                 .cookie('token', token, {httpOnly: true,secure:true,sameSite:"None"})
                 .status(200)
                 .json({ message: "Login successful", data: user , token:token})
@@ -24,14 +24,14 @@ import bcrypt from "bcrypt"
             const token = jwt.sign({_id: newUser._id,role:newUser.role}, process.env.SECRET_TOKEN, {
                 expiresIn: "24h",
               });
-             res
+              return  res
             .cookie('token', token, {httpOnly: true,secure:true,sameSite:"None"})
             .status(200)
             .json({ message: "sign up successful", data: newUser , token})
         
         }
          } catch (error){
-           res.status(404).json(error.message)
+            return   res.status(404).json(error.message)
 
         }
 }

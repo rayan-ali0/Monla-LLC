@@ -25,7 +25,7 @@ try{
             totalStock+= product.stock
         })
 
-        res.status(200).json({
+        return   res.status(200).json({
             ordersNumber,
             totalStock,
             productsNb,
@@ -34,7 +34,7 @@ try{
         })
 }
 catch(error){
-    res.status(400).json({message:"error fetching your numbers"})
+    return res.status(400).json({message:"error fetching your numbers"})
 }
 }
 }

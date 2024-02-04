@@ -90,7 +90,7 @@ export const productController = {
         try {
             const product = await Product.findById(id).populate(['category', 'brand', 'model', 'year']);
             if (!product) {
-                res.status(400).json({ message: "Product Not Found" })
+                return  res.status(400).json({ message: "Product Not Found" })
             }
            return res.status(200).json(product)
         }

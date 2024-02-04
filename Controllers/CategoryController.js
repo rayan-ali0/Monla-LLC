@@ -1,83 +1,80 @@
 import Category from "../Models/Category.js";
 
-export const categoryController={
-    createCategory:async(req,res)=>{
-        const {title}=req.body
-        const image=req.file.path
+export const categoryController = {
+    createCategory: async (req, res) => {
+        const { title } = req.body
+        const image = req.file.path
         try {
-            const category= await Category.create({title, image})
-            res.status(200).json(category)
+            const category = await Category.create({ title, image })
+            return res.status(200).json(category)
         } catch (error) {
-            res.status(404).json(error.message)
+            return res.status(404).json(error.message)
             console.log(error.message)
         }
     }
     ,
-    getCategory:async(req,res)=>{
+    getCategory: async (req, res) => {
         try {
-            const category=await Category.find()
-            if (!category){
-                res.status(401).json("not found")
+            const category = await Category.find()
+            if (!category) {
+                return res.status(401).json("not found")
             }
-            res.status(200).json(category)
+            return res.status(200).json(category)
         } catch (error) {
-            res.status(404).json(error.message)
+            return res.status(404).json(error.message)
         }
     },
-    getCategoryById:async(req,res)=>{
-        const {id}=req.params
+    getCategoryById: async (req, res) => {
+        const { id } = req.params
         try {
-            const  category= await Category.findById(id)
-            if(category){
-                res.status(200).json(category)
+            const category = await Category.findById(id)
+            if (category) {
+                return res.status(200).json(category)
             }
-            res.status(400).json("not found")
+            return res.status(400).json("not found")
         } catch (error) {
-            res.status(404).json(error.message)
+            return res.status(404).json(error.message)
         }
     },
     updateCategory: async (req, res) => {
-        // const { categoryId } = req.body;
-        const image=req.file.path
-        const {title}= req.body
+        const image = req.file.path
+        const { title } = req.body
         const { id } = req.params;
-    
+
         try {
             const category = await Category.findById(id);
-    
+
             if (!category) {
                 return res.status(404).json("Category not found");
             }
-                // category.categoryId = categoryId;
-                if(title) category.title= title;
-                if(image) category.image=image
-            
-    
+            if (title) category.title = title;
+            if (image) category.image = image
+
+
             const updatedCategory = await category.save();
-    
+
             return res.status(200).json(updatedCategory);
         } catch (error) {
-           return  res.status(500).json(error.message);
+            return res.status(500).json(error.message);
         }
     }
     ,
-    deleteCategory:async(req,res)=>{
-        const {id}=req.params
-        if(!id){
+    deleteCategory: async (req, res) => {
+        const { id } = req.params
+        if (!id) {
             return res.status(500).json({
                 message: "Error! can't find id, not valid"
             })
         }
-        console.log("entering try with: ", id);
         try {
-            const deletedCategory= await Category.findByIdAndDelete(id)
-            if(!deletedCategory){
-                 res.status(404).json("Not found")
+            const deletedCategory = await Category.findByIdAndDelete(id)
+            if (!deletedCategory) {
+                return res.status(404).json("Not found")
             }
-            res.status(200).json({message:"Category deleted successfully", deletedCategory    })
+            return res.status(200).json({ message: "Category deleted successfully", deletedCategory })
         } catch (error) {
-            res.status(404).json(error.message)
+            return res.status(404).json(error.message)
         }
     }
-    
+
 }

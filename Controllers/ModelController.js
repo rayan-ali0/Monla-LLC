@@ -6,12 +6,12 @@ export const modelController = {
         const {name, brandId} = req.body
         try {
             const model = await Model.create({ name, brandId})
-            res.status(200).json(model)
+            return  res.status(200).json(model)
         }
         catch (error) {
             console.error(error)
             console.log(error)
-            res.status(404).json({ status: 404, error: error })
+            return   res.status(404).json({ status: 404, error: error })
         }
     }
     ,
@@ -20,12 +20,12 @@ export const modelController = {
         try {
             const model = await Model.findById(id).populate(['brandId']);
             if (!model) {
-                res.status(400).json("Model Not Found")
+                return    res.status(400).json("Model Not Found")
             }
-            res.status(200).json(model)
+            return  res.status(200).json(model)
         }
         catch (error) {
-            res.status(404).json(error.message)
+            return res.status(404).json(error.message)
         }
     }
     ,
@@ -33,12 +33,12 @@ export const modelController = {
         try {
             const Models = await Model.find().populate(['brandId']);
             if (!Models) {
-                res.status(400).json("model Not Found")
+                return     res.status(400).json("model Not Found")
             }
-            res.status(200).json(Models)
+            return res.status(200).json(Models)
         }
         catch (error) {
-            res.status(404).json(error.message)
+            return   res.status(404).json(error.message)
         }
     }
     ,
@@ -49,12 +49,12 @@ export const modelController = {
             const deletedModel = await Model.findByIdAndDelete(id);
     
             if (deletedModel) {
-                res.status(200).json({ message: 'Model deleted successfully' });
+                return   res.status(200).json({ message: 'Model deleted successfully' });
             } else {
-                res.status(404).json({ error: 'Model not found' });
+                return   res.status(404).json({ error: 'Model not found' });
             }
         } catch (error) {
-            res.status(500).json({ error: error.message });
+            return  res.status(500).json({ error: error.message });
         }
     }
     ,
@@ -71,9 +71,9 @@ export const modelController = {
         );
 
         if (editedModel) {
-            res.status(200).json(editedModel);
+            return   res.status(200).json(editedModel);
         } else {
-            res.status(404).json({ error: "Model not found" });
+            return  res.status(404).json({ error: "Model not found" });
         }
     } catch (error) {
         // Handle validation errors
@@ -83,7 +83,7 @@ export const modelController = {
         }
 
         // Handle other errors
-        res.status(500).json({ error: error.message });
+        return res.status(500).json({ error: error.message });
     }
 }
     ,
@@ -96,10 +96,10 @@ export const modelController = {
             return res.status(404).json({ message: 'No models found for the specified brand ID.' });
           }
       
-          res.status(200).json(models);
+          return   res.status(200).json(models);
         } catch (error) {
           console.error(error);
-          res.status(500).json({ message: 'Internal Server Error' });
+          return   res.status(500).json({ message: 'Internal Server Error' });
         }
       }
     

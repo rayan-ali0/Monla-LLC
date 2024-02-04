@@ -1,18 +1,12 @@
 import Order from "../Models/Order.js"
 import Product from '../Models/Product.js'
 import User from '../Models/User.js'
-// import Shipping from '../Models/Shipping.js'
 
 export const orderController = {
     createOrder: async (req, res) => {
         const { userName, userEmail, total, shippingId, userPhone, address, userId, productsOrdered } = req.body
-        // const orderedDate = new Date()
-        // const user = await User.findById({ _id: userId })
         const orders = await Order.find()
-        // let total = 0,
         let count = orders.length + 1
-        // for (let product in productsOrdered)
-        //     total += (product[i].quantity * product[i].price)
         try {
             const newOrder = await Order.create({
                 userName,
@@ -30,17 +24,16 @@ export const orderController = {
                 for (let i = 0; i < productsOrdered.length; i++) {
                     const product = await Product.findById(productsOrdered[i].productId)
                     if (product) {
-                        console.log(product.stock)
                         product.stock -= Number(productsOrdered[i].quantity)
                         await product.save()
                     }
                     else {
-                        res.status(404).json({ message: "Product Not Found" })
+                        return res.status(404).json({ message: "Product Not Found" })
                     }
                 }
             }
             await newOrder.save()
-            return res.status(200).json({ message: 'Your Order has been created successfuly!', Order: newOrder })            // newOrder ? res.status(200).json({ message: 'New Order has been created!', Order: newOrder }) :
+            return res.status(200).json({ message: 'Your Order has been created successfuly!', Order: newOrder })
 
         }
         catch (error) {
@@ -65,11 +58,10 @@ export const orderController = {
                 return res.status(200).json({ Order: order })
             }
             else {
-                res.status(404).send(`Order with ID ${id} is not found!`)
+                return res.status(404).send(`Order with ID ${id} is not found!`)
 
             }
-            // order ? res.status(200).json({ Order: order }) :
-            //    res.status(404).send(`Order with ID ${id} is not found!`)
+
         }
         catch (error) {
             return res.status(404).json({ status: 404, error: error })
@@ -86,8 +78,6 @@ export const orderController = {
                 return res.status(404).send(`Order with Order Number ${orderNumber} doesn't exist!`)
 
             }
-            // order ? res.status(200).json({ Order: order }) :
-            // res.status(404).send(`Order with Order Number ${orderNumber} doesn't exist!`)
         }
         catch (error) {
             return res.status(404).json({ status: 404, error: error })
@@ -169,7 +159,7 @@ export const orderController = {
 
                 }
             }
-            else{
+            else {
                 return res.status(400).json({ message: "Order not found" })
 
             }

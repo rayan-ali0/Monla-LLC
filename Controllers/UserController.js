@@ -39,10 +39,10 @@ export const userController = {
         sameSite: "None",
       });
 
-      res.status(201).json(newUser);
+      return   res.status(201).json(newUser);
     } catch (error) {
       console.log(error);
-      res.status(500).json({ error: "Internal Server Error" });
+      return  res.status(500).json({ error: "Internal Server Error" });
     }
   },
   getOneUser: async (req, res) => {
@@ -50,13 +50,13 @@ export const userController = {
     try {
       const user = await User.findById(userId);
       if (user) {
-        res.status(200).json(user);
+        return  res.status(200).json(user);
       } else {
-        res.status(404).json({ error: "User not found" });
+        return  res.status(404).json({ error: "User not found" });
       }
     } catch (error) {
       console.log(error);
-      res.status(500).json({ error: "Internal Server Error" + error.message });
+      return  res.status(500).json({ error: "Internal Server Error" + error.message });
     }
   },
 
@@ -64,9 +64,9 @@ export const userController = {
   getAllUsers: async (req, res) => {
     try {
       const allUsers = await User.find();
-      res.status(200).json(allUsers);
+      return   res.status(200).json(allUsers);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      return  res.status(500).json({ message: error.message });
     }
   },
 
@@ -75,12 +75,12 @@ export const userController = {
     try {
       const user = await User.findById(req.params.id);
       if (!user) {
-        res.status(404).json({ message: "User not found" });
+        return    res.status(404).json({ message: "User not found" });
         return;
       }
-      res.status(200).json(user);
+      return  res.status(200).json(user);
     } catch (error) {
-      res.status(500).json({ message: "key one" + error.message });
+      return  res.status(500).json({ message: "key one" + error.message });
     }
   },
 
@@ -128,9 +128,9 @@ export const userController = {
         }
       );
   
-      res.status(200).json(updatedUser);
+      return  res.status(200).json(updatedUser);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      return  res.status(500).json({ message: error.message });
     }
   },
 
@@ -142,9 +142,9 @@ export const userController = {
         res.status(404).json({ message: "User not found" });
         return;
       }
-      res.status(200).json({ message: "User deleted successfully" });
+      return res.status(200).json({ message: "User deleted successfully" });
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      return  res.status(500).json({ message: error.message });
     }
   },
 };

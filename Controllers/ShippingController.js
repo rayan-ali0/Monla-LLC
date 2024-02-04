@@ -6,10 +6,10 @@ export const shippingController = {
       const { location, message, cost } = req.body;
       const newShipping = new Shipping({ location, message, cost });
       const savedShipping = await newShipping.save();
-      res.status(201).json(savedShipping);
+      return   res.status(201).json(savedShipping);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: "Internal Server Error" });
+      return res.status(500).json({ error: "Internal Server Error" });
     }
   },
 
@@ -19,10 +19,10 @@ export const shippingController = {
       if (!shippings) {
         return res.status(404).json({ error: "There is no shippings yet." });
       }
-      res.status(200).json(shippings);
+      return   res.status(200).json(shippings);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: "Internal Server Error" });
+      return   res.status(500).json({ error: "Internal Server Error" });
     }
   },
 
@@ -32,10 +32,10 @@ export const shippingController = {
       if (!shipping) {
         return res.status(404).json({ error: "Shipping not found" });
       }
-      res.status(200).json(shipping);
+      return   res.status(200).json(shipping);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: "Internal Server Error" });
+      return  res.status(500).json({ error: "Internal Server Error" });
     }
   },
 
@@ -61,11 +61,11 @@ export const shippingController = {
     try {
       const deletedShipping = await Shipping.findByIdAndDelete(id);
       if (!deletedShipping) {
-        res.status(404).json({ error: "Shipping not found" });
+        return    res.status(404).json({ error: "Shipping not found" });
       }
-      res.status(200).json({ status: "Shipping Deleted" });
+      return res.status(200).json({ status: "Shipping Deleted" });
     } catch (error) {
-      res.status(404).json(error.message);
+      return   res.status(404).json(error.message);
     }
   },
 };

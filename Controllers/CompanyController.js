@@ -37,25 +37,25 @@ export const companyController = {
 
       const savedCompany = await newCompany.save();
 
-      res.status(201).json(savedCompany);
+    return  res.status(201).json(savedCompany);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: "Internal Server Error" });
+     return res.status(500).json({ error: "Internal Server Error" });
     }
   },
 
   getCompany: async (req, res) => {
     try {
       const existingCompany = await Company.findOne();
-  
+
       if (!existingCompany) {
         return res.status(404).json({ error: 'Company not found.' });
       }
-  
-      res.json(existingCompany);
+
+     return res.json(existingCompany);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'Internal Server Error' });
+     return res.status(500).json({ error: 'Internal Server Error' });
     }
   },
 
@@ -95,10 +95,10 @@ export const companyController = {
           .json({ error: "Company did not update it successfully." });
       }
 
-      res.json(updatedCompany);
+    return  res.json(updatedCompany);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: "Internal Server Error" });
+     return res.status(500).json({ error: "Internal Server Error" });
     }
   },
 
@@ -110,10 +110,10 @@ export const companyController = {
         return res.status(404).json({ error: "Company not found." });
       }
 
-      res.json({ message: "Company deleted successfully." });
+     return res.json({ message: "Company deleted successfully." });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: "Internal Server Error" });
+     return res.status(500).json({ error: "Internal Server Error" });
     }
   },
 };
