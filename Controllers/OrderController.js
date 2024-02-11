@@ -149,8 +149,8 @@ export const orderController = {
         try {
             const removeOrder = await Order.findById(id)
             if (removeOrder) {
-                if (removeOrder.status !== "delivered" || removeOrder.status !== "rejected") {
-                    return res.status(400).json({ message: "You can only delete delivered or rejected Orders" })
+                if (removeOrder.status !== "delivered" && removeOrder.status !== "rejected") {
+                    return res.status(400).json({ message: "You can only delete delivered or rejected Orders"})
 
                 }
                 else {
