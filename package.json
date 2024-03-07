@@ -19,7 +19,8 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon App.js"
+    "dev": "nodemon App.js",
+    "build":"npm install"
   },
   "keywords": [],
   "author": "",
