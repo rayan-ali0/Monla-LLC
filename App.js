@@ -33,7 +33,7 @@ app.use(session({
   }));
 
 const corsOption = {
-  origin: "http://localhost:5173",
+  origin: ["http://localhost:5173",'https://monla-llc.vercel.app/'],
   credentials: true,
   optionsSuccessStatus: 200,
 };
